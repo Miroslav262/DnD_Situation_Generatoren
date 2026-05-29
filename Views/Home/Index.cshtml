@@ -1,0 +1,27 @@
+﻿@model int
+@{
+    ViewData["Title"] = "Home Page";
+}
+<style>
+    .groq-output {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        font-family: Consolas, monospace;
+        font-size: 15px;
+        line-height: 1.4;
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        max-height: 500px;
+        overflow-y: auto;
+    }
+</style>
+
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p> Всего обнаружено существ: @Model</p>
+</div>
+
+
