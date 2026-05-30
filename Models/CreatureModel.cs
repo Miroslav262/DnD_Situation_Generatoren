@@ -35,6 +35,16 @@ public class CreatureModel
     public int? truesight_range { get; set; }
     public List<CreatureAction>? actions { get; set; }
     public List<CreatureTrait>? traits { get; set; }
+
+    public string getEffectiveDescShort()
+    {
+        var traits = this.traits?.Select(t => t.name).Take(2);
+        var actions = this.actions?.Select(a => a.name).Take(2);
+
+        return $"{name}, {size?.name} {type?.name}";
+    }
+
+
 }
 
 public class DocumentInfo

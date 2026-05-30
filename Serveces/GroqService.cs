@@ -48,5 +48,6 @@ namespace dndsitgen.Services
             return parsed?.choices?.FirstOrDefault()?.message?.content
                    ?? "No content returned";
         }
+
     }
 }

@@ -37,7 +37,20 @@ namespace dndsitgen.Models
                 { "Linear", "Линейный" },
                 { "SuperBoss", "Супербосс" }
             };
-        public CreatureModel[] Monsters { get; set; }
+
+        public Dictionary<string, string> ScenaryDesc { get; set; } = new Dictionary<string, string>
+        {
+            { "Minions", "массовая схватка с большим количеством слабых противников" },
+            { "Boss", "битва с сильным противником, вокруг которого строится вся сцена" },
+            { "Uniform", "сбалансированное столкновение с равными по силе врагами" },
+            { "Root", "столкновение с врагами незначительно различающихся по силе" },
+            { "Linear", "постепенно нарастающая по сложности битва, где враги становятся сильнее" },
+            { "SuperBoss", "эпическая битва с главным, чрезвычайно мощным боссом" }
+        };
+
+        public CreatureModel[]? Monsters { get; set; }
+
+        public string? groqAnswer { get; set; }
 
 
     }
