@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient<GroqService>();
 builder.Services.AddHttpClient<CreaturesService>();
+builder.Services.AddScoped<CreatureCalculatorService>();
 builder.Configuration.AddUserSecrets<Program>();
 
 
