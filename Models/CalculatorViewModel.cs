@@ -37,6 +37,8 @@ namespace dndsitgen.Models
                 { "Linear", "Линейный" },
                 { "SuperBoss", "Супербосс" }
             };
+        public CreatureModel[] Monsters { get; set; }
+
 
     }
 }

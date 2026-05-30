@@ -28,8 +28,17 @@ namespace dndsitgen.Controllers
             int randomId = Random.Shared.Next(1, maxId.Value + 1);
             return View("~/Views/Home/Creature.cshtml", await _service.getCreature(randomId));
         }
-        public async Task<IActionResult> Creature(CreatureModel creatureModel) {
+        [HttpPost("/CreatureLibrary/Creature")]
+        public async Task<IActionResult> Creature(CreatureModel creatureModel)
+        {
             return View("~/Views/Home/Creature.cshtml", creatureModel);
-        }   
+        }
+
+        [HttpGet("/CreatureLibrary/Creature/key")]
+        public async Task<IActionResult> CreatureByKey(string key)
+        {
+            return View("~/Views/Home/Creature.cshtml", await _service.getCreatureByKey(key));
+        }
+
     }
 }

@@ -8,11 +8,12 @@ public class CalculatorController : Controller
     private readonly CreatureCalculatorService calc;
     private readonly CreaturesService creaturesService;
 
-    public CalculatorController(CreatureCalculatorService calc, CreaturesService creatureService)
+    public CalculatorController(CreatureCalculatorService calc, CreaturesService creaturesService)
     {
         this.calc = calc;
         this.creaturesService = creaturesService;
     }
+
 
     [HttpGet]
     public IActionResult Index()
@@ -21,7 +22,7 @@ public class CalculatorController : Controller
     }
 
     [HttpPost]
-    public IActionResult Index(CalculatorViewModel model)
+    public async Task<IActionResult> Index(CalculatorViewModel model)
     {
         if (!string.IsNullOrWhiteSpace(model.HeroCRInput) &&
             !string.IsNullOrWhiteSpace(model.HeroKInput))
@@ -62,16 +63,23 @@ public class CalculatorController : Controller
             if (k.Length > 0)
             {
                 float[] raw = calc.getRawCRs(model.HeroComplexity, k, scenary);
-
                 float[] std = CRStandardizer.toStandart(raw);
 
                 model.K = k;
                 model.RawCR = raw;
                 model.StandartCR = std;
 
+                model.Monsters = new CreatureModel[k.Length];
+                for (int i = 0; i < k.Length; i++)
+                {
+
+                    model.Monsters[i] = await creaturesService.getRandomCreatureByCR(std[i]);
+                }
+
                 model.CurrentComplexity = calc.getComplexity(raw, k);
                 model.StandartComplexity = calc.getComplexity(std, k);
             }
+
 
         }
 

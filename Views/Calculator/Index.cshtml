@@ -163,6 +163,7 @@
                 <th>Количество</th>
                 <th>ПО (первичные)</th>
                 <th>ПО (вторичные)</th>
+                <th>Существа</th>
             </tr>
         </thead>
         <tbody>
@@ -172,6 +173,12 @@
                 <td>@Model.K[i]</td>
                 <td>@Model.RawCR[i]</td>
                 <td>@Model.StandartCR[i]</td>
+                <td>
+                    <a href="/CreatureLibrary/Creature/key?key=@Model.Monsters[i].key">
+                        @Model.Monsters[i].name
+                    </a>
+
+                </td>
             </tr>
         }
         </tbody>

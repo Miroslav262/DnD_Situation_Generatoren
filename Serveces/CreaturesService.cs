@@ -41,12 +41,28 @@ namespace dndsitgen.Serveces
             return jsonDocument.RootElement.GetProperty("results").Deserialize<List<CreatureModel>>(options).First<CreatureModel>();
         }
 
-        public async Task<CreatureModel> getRandomCreatureByCR(int cr) {
+        public async Task<CreatureModel> getRandomCreatureByCR(float cr) {
             
             int count = await getCount("challenge_rating="+cr);
             int id = Random.Shared.Next() % count + 1;
 
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "https://api.open5e.com/v2/creatures/?limit=1&challenge_rating="+cr+"&page=" + id);
+            HttpResponseMessage httpResponse = await _httpClient.SendAsync(message);
+
+            string json = await httpResponse.Content.ReadAsStringAsync();
+            JsonDocument jsonDocument = JsonDocument.Parse(json);
+
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            return jsonDocument.RootElement.GetProperty("results").Deserialize<List<CreatureModel>>(options).First<CreatureModel>();
+
+        }
+        public async Task<CreatureModel> getCreatureByKey(string key)
+        {
+
+            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "https://api.open5e.com/v2/creatures/?key="+key);
             HttpResponseMessage httpResponse = await _httpClient.SendAsync(message);
 
             string json = await httpResponse.Content.ReadAsStringAsync();
