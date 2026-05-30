@@ -93,19 +93,23 @@
 
 
 <h2>Расчёт сложности боя</h2>
-
 <form method="post">
 
+    <h2>Герои</h2>
+
+    <label>Уровни героев (через запятую):</label>
+    <input type="text" name="HeroCRInput" value="@Model.HeroCRInput" />
+
+    <label>Количество героев каждого уровня:</label>
+    <input type="text" name="HeroKInput" value="@Model.HeroKInput" />
+
+
+    <h2>Противники</h2>
+
     <label>Количество существ каждого вида (через запятую):</label>
-    </br>
     <input type="text" name="KInput" value="@Model.KInput" />
 
-    <label>Целевая сложность:</label>
-    </br>
-    <input type="number" step="0.1" name="Target" value="@Model.Target" />
-
     <label>Сценарий:</label>
-    </br>
     <select name="SelectedScenary">
         @foreach (var s in Model.Scenaries)
         {
@@ -115,55 +119,40 @@
         }
     </select>
 
-    <button type="submit">Рассчитать</button>
-    <script>
-    function validateForm(event) {
-        const kInput = document.querySelector("input[name='KInput']");
-        const targetInput = document.querySelector("input[name='Target']");
-
-        const kValue = kInput.value.trim();
-        const targetValue = targetInput.value.trim();
-
-        if (!kValue) {
-            alert("Введите массив K (например: 10, 5, 2)");
-            event.preventDefault();
-            return false;
-        }
-
-        const kParts = kValue.split(",").map(x => x.trim());
-        for (let part of kParts) {
-            if (!/^\d+$/.test(part)) {
-                alert("K должен содержать только положительные целые числа, разделённые запятыми.");
-                event.preventDefault();
-                return false;
-            }
-        }
-
-        if (!targetValue || isNaN(targetValue)) {
-            alert("Введите корректное значение сложности (число).");
-            event.preventDefault();
-            return false;
-        }
-
-        if (parseFloat(targetValue) <= 0) {
-            alert("Сложность должна быть больше 0.");
-            event.preventDefault();
-            return false;
-        }
-
-        return true;
-    }
-
-    document.querySelector("form").addEventListener("submit", validateForm);
-</script>
+    <button type="submit">Рассчитать бой</button>
 
 </form>
+
+
+@if (Model.HeroCR != null)
+{
+    <h3>Сложность героев: @Model.HeroComplexity</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>CR героя</th>
+                <th>Количество</th>
+            </tr>
+        </thead>
+        <tbody>
+        @for (int i = 0; i < Model.HeroCR.Length; i++)
+        {
+            <tr>
+                <td>@Model.HeroCR[i]</td>
+                <td>@Model.HeroK[i]</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
 
 @if (Model.RawCR != null)
 {
     <h3>Результаты</h3>
 
-    <p><b>Цель:</b> @Model.Target</p>
+    <p><b>Сложность героев:</b> @Model.HeroComplexity</p>
     <p><b>Промежуточные:</b> @Model.CurrentComplexity</p>
     <p><b>Стандартизированные:</b> @Model.StandartComplexity</p>
 
@@ -187,3 +176,69 @@
         </tbody>
     </table>
 }
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    function validateForm(event) {
+
+        const crInput = document.querySelector("input[name='HeroCRInput']");
+        const kHeroInput = document.querySelector("input[name='HeroKInput']");
+
+        const crValue = crInput.value.trim();
+        const kHeroValue = kHeroInput.value.trim();
+
+        if (!crValue || !kHeroValue) {
+            alert("Введите уровни героев и их количество.");
+            event.preventDefault();
+            return false;
+        }
+
+        const crParts = crValue.split(",").map(x => x.trim());
+        const kHeroParts = kHeroValue.split(",").map(x => x.trim());
+
+        if (crParts.length !== kHeroParts.length) {
+            alert("Количество уровней и количество героев должно совпадать.");
+            event.preventDefault();
+            return false;
+        }
+
+        for (let part of crParts) {
+            if (isNaN(part)) {
+                alert("Уровни героев должны быть числами.");
+                event.preventDefault();
+                return false;
+            }
+        }
+
+        for (let part of kHeroParts) {
+            if (!/^\d+$/.test(part)) {
+                alert("Количество героев должно быть целыми числами.");
+                event.preventDefault();
+                return false;
+            }
+        }
+
+        const kInput = document.querySelector("input[name='KInput']");
+        const kValue = kInput.value.trim();
+
+        if (!kValue) {
+            alert("Введите количество существ.");
+            event.preventDefault();
+            return false;
+        }
+
+        const kParts = kValue.split(",").map(x => x.trim());
+        for (let part of kParts) {
+            if (!/^\d+$/.test(part)) {
+                alert("Количество существ должно быть целыми числами.");
+                event.preventDefault();
+                return false;
+            }
+        }
+    }
+
+    document.querySelector("form").addEventListener("submit", validateForm);
+});
+</script>
+

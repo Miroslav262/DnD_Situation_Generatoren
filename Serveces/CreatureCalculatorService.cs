@@ -85,7 +85,8 @@ namespace dndsitgen.Serveces
 
         private float f(int k_i)
         {
-            return (float)Math.Sqrt(k_i);
+            // return (float)Math.Sqrt(k_i);
+            return k_i;
         }
 
         public float getComplexity(float[] cr, int[] k)
@@ -95,12 +96,6 @@ namespace dndsitgen.Serveces
 
             return (float)Math.Sqrt(i) * primaryComplexity;
         }
-
-
-
-
-
-
 
 
         private float[] buildCRs(float c, int[] k, Scenary scenary)
@@ -142,6 +137,10 @@ namespace dndsitgen.Serveces
             return buildCRs(c, k, scenary);
         }
 
+        public float getHeroesComplexity(float[] cr, int[] k)
+        {
+            return getComplexity(cr, k);
+        }
 
 
     }
