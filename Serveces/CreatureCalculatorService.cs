@@ -142,5 +142,7 @@ namespace dndsitgen.Serveces
             return buildCRs(c, k, scenary);
         }
 
+
+
     }
 }
