@@ -1,4 +1,5 @@
-﻿using dndsitgen.Models;
+﻿using System.Text.Json;
+using dndsitgen.Models;
 using dndsitgen.Serveces;
 using dndsitgen.Serveces.Scenaries;
 using dndsitgen.Utils;
@@ -18,12 +19,22 @@ public class CalculatorController : Controller
     [HttpGet]
     public IActionResult Index()
     {
+        var saved = HttpContext.Session.GetString("LastModel");
+        if (saved != null)
+        {
+            var model = JsonSerializer.Deserialize<CalculatorViewModel>(saved);
+            return View(model);
+        }
+
         return View(new CalculatorViewModel());
     }
+
 
     [HttpPost]
     public async Task<IActionResult> Index(CalculatorViewModel model)
     {
+        HttpContext.Session.Remove("LastModel");
+
         if (!string.IsNullOrWhiteSpace(model.HeroCRInput) &&
             !string.IsNullOrWhiteSpace(model.HeroKInput))
         {
@@ -82,6 +93,7 @@ public class CalculatorController : Controller
 
 
         }
+        HttpContext.Session.SetString("LastModel", JsonSerializer.Serialize(model));
 
         return View(model);
     }

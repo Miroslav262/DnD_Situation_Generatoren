@@ -10,6 +10,7 @@ builder.Services.AddHttpClient<CreaturesService>();
 builder.Services.AddScoped<CreatureCalculatorService>();
 builder.Configuration.AddUserSecrets<Program>();
 
+builder.Services.AddSession();
 
 
 var app = builder.Build();
@@ -25,6 +26,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseSession();
 
 app.UseRouting();
 
