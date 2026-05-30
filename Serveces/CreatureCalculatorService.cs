@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using dndsitgen.Serveces.Scenaries;
+using dndsitgen.Utils;
 
 namespace dndsitgen.Serveces
 {
@@ -156,5 +157,9 @@ namespace dndsitgen.Serveces
         }
 
 
+
+        public float[] getStandardCRs(float T_M_i, int[] k, Scenary scenary) {
+            return CRStandardizer.toStandart(getRawCRs(T_M_i, k, scenary));
+        }
     }
 }

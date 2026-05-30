@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 public class CalculatorController : Controller
 {
     private readonly CreatureCalculatorService calc;
+    private readonly CreaturesService creaturesService;
 
-    public CalculatorController(CreatureCalculatorService calc)
+    public CalculatorController(CreatureCalculatorService calc, CreaturesService creatureService)
     {
         this.calc = calc;
+        this.creaturesService = creaturesService;
     }
 
     [HttpGet]
