@@ -134,8 +134,21 @@ namespace dndsitgen.Serveces
         public float[] getRawCRs(float T_M_i, int[] k, Scenary scenary)
         {
             float c = SolveC(T_M_i, k, scenary);
-            return buildCRs(c, k, scenary);
+            float[] cr = buildCRs(c, k, scenary);
+
+            var pairs = k.Zip(cr, (kk, cc) => new { k = kk, cr = cc })
+                         .OrderBy(p => p.k)
+                         .ToArray();
+
+            for (int i = 0; i < k.Length; i++)
+            {
+                k[i] = pairs[i].k;
+                cr[i] = pairs[i].cr;
+            }
+
+            return cr;
         }
+
 
         public float getHeroesComplexity(float[] cr, int[] k)
         {

@@ -10,6 +10,8 @@
                 "Minions" => new MinionsScenary(),
                 "Uniform" => new UniformScenary(),
                 "Root" => new RootScenary(),
+                "Linear" => new LinearScenary(),
+                "SuperBoss" => new SuperBossScenary(),
                 _ => new MinionsScenary()
             };
         }

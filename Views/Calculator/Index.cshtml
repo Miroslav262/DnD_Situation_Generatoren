@@ -114,10 +114,11 @@
         @foreach (var s in Model.Scenaries)
         {
             <option value="@s" selected="@(s == Model.SelectedScenary)">
-                @s
+                @Model.ScenaryLocalization[s]
             </option>
         }
     </select>
+
 
     <button type="submit">Рассчитать бой</button>
 
@@ -126,12 +127,12 @@
 
 @if (Model.HeroCR != null)
 {
-    <h3>Сложность героев: @Model.HeroComplexity</h3>
+    <h3>Сила героев: @Model.HeroComplexity</h3>
 
     <table>
         <thead>
             <tr>
-                <th>CR героя</th>
+                <th>Уровень героя</th>
                 <th>Количество</th>
             </tr>
         </thead>
@@ -160,8 +161,8 @@
         <thead>
             <tr>
                 <th>Количество</th>
-                <th>ПО (raw)</th>
-                <th>ПО (standart)</th>
+                <th>ПО (первичные)</th>
+                <th>ПО (вторичные)</th>
             </tr>
         </thead>
         <tbody>

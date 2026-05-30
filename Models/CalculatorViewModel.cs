@@ -23,9 +23,21 @@ namespace dndsitgen.Models
         {
             "Minions",
             "Boss",
+            "Linear",
             "Uniform",
-            "Root"
+            "Root",
+            "SuperBoss"
         };
+        public Dictionary<string, string> ScenaryLocalization { get; set; } = new Dictionary<string, string>
+            {
+                { "Minions", "Миньоны" },
+                { "Boss", "Босс" },
+                { "Uniform", "Равномерный" },
+                { "Root", "Корень" },
+                { "Linear", "Линейный" },
+                { "SuperBoss", "Супербосс" }
+            };
+
     }
 }
 
