@@ -29,20 +29,25 @@
         <div class="col-md-4">
             <h4>Скорости</h4>
             <ul>
-                @if(@Model.speed_all.walk!= 0){
+                @if (@Model.speed_all.walk != 0)
+                {
                     <li><strong>Ходьба:</strong> @Model.speed_all.walk ft</li>
                 }
-                @if(@Model.speed_all.crawl!= 0){
-                <li><strong>Ползание:</strong> @Model.speed_all.crawl ft</li>
+                @if (@Model.speed_all.crawl != 0)
+                {
+                    <li><strong>Ползание:</strong> @Model.speed_all.crawl ft</li>
                 }
-                @if(@Model.speed_all.swim!= 0){
-                <li><strong>Плавание:</strong> @Model.speed_all.swim ft</li>
+                @if (@Model.speed_all.swim != 0)
+                {
+                    <li><strong>Плавание:</strong> @Model.speed_all.swim ft</li>
                 }
-                @if(@Model.speed_all.climb!= 0){
-                <li><strong>Лазание:</strong> @Model.speed_all.climb ft</li>
+                @if (@Model.speed_all.climb != 0)
+                {
+                    <li><strong>Лазание:</strong> @Model.speed_all.climb ft</li>
                 }
-                @if(@Model.speed_all.fly!= 0){
-                <li><strong>Полет:</strong> @Model.speed_all.fly ft</li>
+                @if (@Model.speed_all.fly != 0)
+                {
+                    <li><strong>Полет:</strong> @Model.speed_all.fly ft</li>
                 }
             </ul>
         </div>
@@ -79,7 +84,12 @@
     <h3>Характеристики</h3>
     <table class="table table-bordered text-center w-50">
         <tr>
-            <th>Сила</th><th>Ловкость</th><th>Выносливость</th><th>Интеллект</th><th>Магия</th><th>Харизма</th>
+            <th>Сила</th>
+            <th>Ловкость</th>
+            <th>Выносливость</th>
+            <th>Интеллект</th>
+            <th>Магия</th>
+            <th>Харизма</th>
         </tr>
         <tr>
             <td>@Model.ability_scores.strength</td>
@@ -95,12 +105,16 @@
 
     <h3>Навыки</h3>
     <ul>
-        @foreach (var skill in Model.skill_bonuses_all.GetType().GetProperties())
+        @foreach (var prop in Model.skill_bonuses_all.GetType().GetProperties())
         {
+        var key = prop.Name; // например "acrobatics"
+        var value = prop.GetValue(Model.skill_bonuses_all); // число
+        var ru = Model.skills_ru.ContainsKey(key) ? Model.skills_ru[key] : key;
 
-            <li><strong> @(Model.skills_ru[skill.Name]:</strong> @skill.GetValue(Model.skill_bonuses_all)</li>
+        <li><strong>@ru:</strong> @value</li>
         }
     </ul>
+
 
     <hr />
 
