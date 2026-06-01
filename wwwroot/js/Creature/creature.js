@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 el.classList.add("fail");
             }
 
-            el.innerHTML = `${bonus} → (${r} = ${total})`;
+            el.innerHTML = `${bonus} → ( = ${total})`;
         });
     });
 
@@ -39,9 +39,14 @@ document.addEventListener("DOMContentLoaded", () => {
         el.addEventListener("click", (e) => {
             e.preventDefault();
 
-            const expr = el.dataset.hp_roll;
+            const hp = el.dataset.hp_roll;
 
-            const [countPart, rest] = expr.split("d");
+            if (!hp || !hp.includes("d")) {
+                el.innerHTML = `${hp}`;
+                return;
+            }
+
+            const [countPart, rest] = hp.split("d");
             const [sizePart, bonusPart] = rest.split("+");
 
             const count = parseInt(countPart);
@@ -50,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const total = roll(count, size) + bonus;
 
-            el.innerHTML = `(${expr}) → ${total}`;
+            el.innerHTML = `(${hp}) → ${total}`;
         });
     });
 
