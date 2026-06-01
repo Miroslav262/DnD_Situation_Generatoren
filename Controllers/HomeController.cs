@@ -18,11 +18,11 @@ namespace dndsitgen.Controllers
             _service = service;
             this.groqService = groqService;
         }
-
+        [HttpGet("/")]
         public async Task<IActionResult> Index()
         {
 
-            return View(await _service.getCount());
+            return View();
         }
 
         [HttpGet("/groq_test")]

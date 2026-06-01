@@ -1,27 +1,17 @@
-﻿@model int
-@{
-    ViewData["Title"] = "Home Page";
-}
-<style>
-    .groq-output {
-        white-space: pre-wrap;
-        word-wrap: break-word;
-        font-family: Consolas, monospace;
-        font-size: 15px;
-        line-height: 1.4;
-        background: #f8f9fa;
-        padding: 15px;
-        border-radius: 8px;
-        border: 1px solid #ddd;
-        max-height: 500px;
-        overflow-y: auto;
-    }
-</style>
+﻿<link rel="stylesheet" href="~/css/Home/home.css" />
 
+<div class="main">
+    <div class="text-center">
+        <h2 class="display-4">Добро пожаловать, путник!</h2>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p> Всего обнаружено существ: @Model</p>
+        <div class="div_border">
+            <p class="desc">На этом сайте вы можете посчитать сложность боя для битвы:</p>
+            <button class="btn" onclick="location.href='/calculator'">Калькулятор</button>
+        </div>
+
+        <div class="div_border">
+            <p class="desc">Или получить случайное существо из бестиария</p>
+            <button class="btn" onclick="location.href='/creature/random_creature'">Крутить!</button>
+        </div>
+    </div>
 </div>
-
-
