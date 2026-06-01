@@ -1,5 +1,8 @@
 ﻿@model dndsitgen.Models.CreatureModel
 
+<script src="~/js/Creature/creature.js"></script>
+<link rel="stylesheet" href="~/css/Creature/creature.css" />
+
 <div class="container mt-4">
 
     <h1>@Model.name (@Model.type.name)</h1>
@@ -19,8 +22,15 @@
                     }
                 </li>
 
-                <li><strong>HP:</strong> @Model.hit_points (@Model.hit_dice)</li>
-                <li><strong>XP:</strong> @Model.experience_points</li>
+                <li>
+                    <strong>HP:</strong>
+                    @Model.hit_points
+                    <a class="hp_roll" data-default_el=@Model.hit_dice>
+                       (@Model.hit_dice)
+                    </a>
+                </li>
+
+                <li><strong>EXP:</strong>@Model.experience_points</li>
                 <li><strong>Инициатива:</strong> @Model.initiative_bonus</li>
                 <li><strong>Пассивная внимательность:</strong> @Model.passive_perception</li>
             </ul>
@@ -99,6 +109,58 @@
             <td>@Model.ability_scores.wisdom</td>
             <td>@Model.ability_scores.charisma</td>
         </tr>
+        <tr>
+            <td>@Model.modifiers.strength</td>
+            <td>@Model.modifiers.dexterity</td>
+            <td>@Model.modifiers.constitution</td>
+            <td>@Model.modifiers.intelligence</td>
+            <td>@Model.modifiers.wisdom</td>
+            <td>@Model.modifiers.charisma</td>
+        </tr>
+    </table>
+    <h3>Спасброски</h3>
+    <table class="table table-bordered text-center w-50">
+        <tr>
+            <th>Сила</th>
+            <th>Ловкость</th>
+            <th>Выносливость</th>
+            <th>Интеллект</th>
+            <th>Магия</th>
+            <th>Харизма</th>
+        </tr>
+        <tr>
+            <td>
+                <a href="#" class="roll" data-bonus="@Model.saving_throws.strength">
+                    @Model.saving_throws.strength
+                </a>
+            </td>
+            <td>
+                <a href="#" class="roll" data-bonus="@Model.saving_throws.dexterity">
+                    @Model.saving_throws.dexterity
+                </a>
+            </td>
+            <td>
+                <a href="#" class="roll" data-bonus="@Model.saving_throws.constitution">
+                    @Model.saving_throws.constitution
+                </a>
+            </td>
+            <td>
+                <a href="#" class="roll" data-bonus="@Model.saving_throws.intelligence">
+                    @Model.saving_throws.intelligence
+                </a>
+            </td>
+            <td>
+                <a href="#" class="roll" data-bonus="@Model.saving_throws.wisdom">
+                    @Model.saving_throws.wisdom
+                </a>
+            </td>
+            <td>
+                <a href="#" class="roll" data-bonus="@Model.saving_throws.charisma">
+                    @Model.saving_throws.charisma
+                </a>
+            </td>
+        </tr>
+
     </table>
 
     <hr />
@@ -107,11 +169,15 @@
     <ul>
         @foreach (var prop in Model.skill_bonuses_all.GetType().GetProperties())
         {
-        var key = prop.Name; // например "acrobatics"
-        var value = prop.GetValue(Model.skill_bonuses_all); // число
+        var key = prop.Name;
+        var value = prop.GetValue(Model.skill_bonuses_all);
         var ru = Model.skills_ru.ContainsKey(key) ? Model.skills_ru[key] : key;
 
-        <li><strong>@ru:</strong> @value</li>
+        <li><strong>@ru:</strong>
+            <a href="#" class="roll" data-bonus="@value">
+                @value
+            </a>
+        </li>
         }
     </ul>
 

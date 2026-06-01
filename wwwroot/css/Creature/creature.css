@@ -1,0 +1,88 @@
+﻿.container {
+    max-width: 900px;
+}
+
+h1 {
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+h3 {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+hr {
+    margin: 25px 0;
+    border-top: 1px solid #ddd;
+}
+
+.section-box {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.section-box ul {
+    padding-left: 18px;
+}
+
+.section-box li {
+    margin-bottom: 6px;
+}
+.table {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.table th {
+    background: #4a7bd0;
+    color: white;
+    font-weight: 600;
+}
+
+.table td {
+    background: #fafafa;
+}
+
+.roll, .hp_roll {
+    cursor: pointer;
+    color: #2a5bd7;
+    font-weight: 600;
+    transition: color 0.2s ease, transform 0.1s ease;
+}
+
+.roll:hover, .hp_roll:hover {
+    color: #1a3fa0;
+    transform: scale(1.05);
+}
+
+.roll.crit, .hp_roll.crit {
+    color: #d40000;
+    font-weight: 700;
+}
+
+.roll.fail, .hp_roll.fail {
+    color: #0055ff;
+    font-weight: 700;
+}
+
+.action-title, .trait-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.action-desc, .trait-desc {
+    font-size: 15px;
+    color: #444;
+}
+
+.skill-list li {
+    margin-bottom: 4px;
+}
