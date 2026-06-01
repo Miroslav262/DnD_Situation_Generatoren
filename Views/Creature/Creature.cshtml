@@ -79,7 +79,7 @@
     <h3>Характеристики</h3>
     <table class="table table-bordered text-center w-50">
         <tr>
-            <th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th>
+            <th>Сила</th><th>Ловкость</th><th>Выносливость</th><th>Интеллект</th><th>Магия</th><th>Харизма</th>
         </tr>
         <tr>
             <td>@Model.ability_scores.strength</td>
@@ -97,7 +97,8 @@
     <ul>
         @foreach (var skill in Model.skill_bonuses_all.GetType().GetProperties())
         {
-            <li><strong>@skill.Name:</strong> @skill.GetValue(Model.skill_bonuses_all)</li>
+
+            <li><strong> @(Model.skills_ru[skill.Name]:</strong> @skill.GetValue(Model.skill_bonuses_all)</li>
         }
     </ul>
 

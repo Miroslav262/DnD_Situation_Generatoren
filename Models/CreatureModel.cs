@@ -44,6 +44,26 @@ public class CreatureModel
         return $"{name}, {size?.name} {type?.name}";
     }
 
+    public Dictionary<string, string> skills_ru = new Dictionary<string, string>(){
+        {"acrobatics", "акробатика" },
+        {"animal_handling", "уход за животными" },
+        {"arcana", "магия" },
+        {"athletics", "атлетика" },
+        {"deception", "обман" },
+        {"history", "история" },
+        {"insight", "проницательность" },
+        {"intimidation", "запугивание" },
+        {"investigation", "расследование" },
+        {"medicine", "медицина" },
+        {"nature", "природа" },
+        {"perception", "внимание" },
+        {"performance", "исполнение" },
+        {"persuasion", "убеждение" },
+        {"religion", "религия" },
+        {"sleight_of_hand", "ловкость рук" },
+        {"stealth", "скрытность" },
+        {"survival", "выживание" },
+    };
 
 }
 
@@ -143,6 +163,7 @@ public class SavingThrows
     public int charisma { get; set; }
 }
 
+
 public class SkillBonuses
 {
     public int acrobatics { get; set; }
@@ -164,6 +185,7 @@ public class SkillBonuses
     public int stealth { get; set; }
     public int survival { get; set; }
 }
+
 
 public class ResistancesAndImmunities
 {
