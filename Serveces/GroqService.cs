@@ -26,19 +26,19 @@ namespace dndsitgen.Services
 
             request.Content = new StringContent(
                 $$"""
-        {
-          "messages": [
-            {
-              "role": "user",
-              "content": "{{prompt}}"
-            }
-          ],
-          "model": "llama-3.3-70b-versatile"
-        }
-        """,
-                System.Text.Encoding.UTF8,
-                "application/json"
-            );
+                            {
+                              "messages": [
+                                {
+                                  "role": "user",
+                                  "content": "{{prompt}}"
+                                }
+                              ],
+                              "model": "llama-3.3-70b-versatile"
+                            }
+                            """,
+                                    System.Text.Encoding.UTF8,
+                                    "application/json"
+                                );
 
             var response = await _http.SendAsync(request);
             var json = await response.Content.ReadAsStringAsync();

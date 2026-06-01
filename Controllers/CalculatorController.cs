@@ -20,7 +20,7 @@ public class CalculatorController : Controller
     }
 
 
-    [HttpGet]
+    [HttpGet("/calculator")]
     public IActionResult Index()
     {
         var saved = HttpContext.Session.GetString("LastModel");
@@ -34,7 +34,7 @@ public class CalculatorController : Controller
     }
 
 
-    [HttpPost]
+    [HttpPost ("/calculator")]
     public async Task<IActionResult> Index(CalculatorViewModel model)
     {
         HttpContext.Session.Remove("LastModel");
