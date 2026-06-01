@@ -47,16 +47,25 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             const [countPart, rest] = hp.split("d");
-            const [sizePart, bonusPart] = rest.split("+");
-
             const count = parseInt(countPart);
-            const size = parseInt(sizePart);
-            const bonus = parseInt(bonusPart);
 
-            const total = roll(count, size) + bonus;
+            let total;
+
+            if (!hp.includes("+")) {
+                const size = parseInt(rest);
+                total = roll(count, size);
+            }
+            else {
+                const [sizePart, bonusPart] = rest.split("+");
+                const size = parseInt(sizePart);
+                const bonus = parseInt(bonusPart);
+
+                total = roll(count, size) + bonus;
+            }
 
             el.innerHTML = `(${hp}) → ${total}`;
         });
     });
+
 
 });

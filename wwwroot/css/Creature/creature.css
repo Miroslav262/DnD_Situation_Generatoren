@@ -1,4 +1,40 @@
-﻿.container {
+﻿
+
+.grid-table {
+    display: grid;
+    grid-template-columns: repeat(6, max-content);
+    justify-content: start;
+    width: fit-content;
+    margin-bottom: 20px;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+    .grid-table .cell {
+        padding: 10px 14px;
+        border-bottom: 1px solid #eee;
+        text-align: center;
+        white-space: nowrap;
+        font-size: 16px;
+    }
+
+    .grid-table .header {
+        background: #4a7bd0;
+        color: white;
+        font-weight: 600;
+        border-bottom: 2px solid #3a68b5;
+    }
+
+
+    /* Убираем нижнюю границу у последней строки */
+    .grid-table .cell:last-child {
+        border-right: none;
+    }
+
+
+.container {
     max-width: 900px;
 }
 
@@ -26,29 +62,13 @@ hr {
     box-shadow: 0 3px 10px rgba(0,0,0,0.08);
 }
 
-.section-box ul {
-    padding-left: 18px;
-}
+    .section-box ul {
+        padding-left: 18px;
+    }
 
-.section-box li {
-    margin-bottom: 6px;
-}
-.table {
-    background: #fff;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-}
-
-.table th {
-    background: #4a7bd0;
-    color: white;
-    font-weight: 600;
-}
-
-.table td {
-    background: #fafafa;
-}
+    .section-box li {
+        margin-bottom: 6px;
+    }
 
 .roll, .hp_roll {
     cursor: pointer;
@@ -57,20 +77,20 @@ hr {
     transition: color 0.2s ease, transform 0.1s ease;
 }
 
-.roll:hover, .hp_roll:hover {
-    color: #1a3fa0;
-    transform: scale(1.05);
-}
+    .roll:hover, .hp_roll:hover {
+        color: #1a3fa0;
+        transform: scale(1.05);
+    }
 
-.roll.crit, .hp_roll.crit {
-    color: #d40000;
-    font-weight: 700;
-}
+    .roll.crit, .hp_roll.crit {
+        color: #d40000;
+        font-weight: 700;
+    }
 
-.roll.fail, .hp_roll.fail {
-    color: #0055ff;
-    font-weight: 700;
-}
+    .roll.fail, .hp_roll.fail {
+        color: #0055ff;
+        font-weight: 700;
+    }
 
 .action-title, .trait-title {
     font-size: 20px;

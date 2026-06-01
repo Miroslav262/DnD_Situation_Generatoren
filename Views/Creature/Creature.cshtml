@@ -26,11 +26,11 @@
                     <strong>HP:</strong>
                     @Model.hit_points
                     <a class="hp_roll" data-hp_roll=@Model.hit_dice>
-                       (@Model.hit_dice)
+                        (@Model.hit_dice)
                     </a>
                 </li>
 
-                <li><strong>EXP:</strong>@Model.experience_points</li>
+                <li><strong>EXP: </strong>@Model.experience_points</li>
                 <li><strong>Инициатива:</strong> @Model.initiative_bonus</li>
                 <li><strong>Пассивная внимательность:</strong> @Model.passive_perception</li>
             </ul>
@@ -92,76 +92,72 @@
     <hr />
 
     <h3>Характеристики</h3>
-    <table class="table table-bordered text-center w-50">
-        <tr>
-            <th>Сила</th>
-            <th>Ловкость</th>
-            <th>Выносливость</th>
-            <th>Интеллект</th>
-            <th>Магия</th>
-            <th>Харизма</th>
-        </tr>
-        <tr>
-            <td>@Model.ability_scores.strength</td>
-            <td>@Model.ability_scores.dexterity</td>
-            <td>@Model.ability_scores.constitution</td>
-            <td>@Model.ability_scores.intelligence</td>
-            <td>@Model.ability_scores.wisdom</td>
-            <td>@Model.ability_scores.charisma</td>
-        </tr>
-        <tr>
-            <td>@Model.modifiers.strength</td>
-            <td>@Model.modifiers.dexterity</td>
-            <td>@Model.modifiers.constitution</td>
-            <td>@Model.modifiers.intelligence</td>
-            <td>@Model.modifiers.wisdom</td>
-            <td>@Model.modifiers.charisma</td>
-        </tr>
-    </table>
-    <h3>Спасброски</h3>
-    <table class="table table-bordered text-center w-50">
-        <tr>
-            <th>Сила</th>
-            <th>Ловкость</th>
-            <th>Выносливость</th>
-            <th>Интеллект</th>
-            <th>Магия</th>
-            <th>Харизма</th>
-        </tr>
-        <tr>
-            <td>
-                <a href="#" class="roll" data-bonus="@Model.saving_throws.strength">
-                    @Model.saving_throws.strength
-                </a>
-            </td>
-            <td>
-                <a href="#" class="roll" data-bonus="@Model.saving_throws.dexterity">
-                    @Model.saving_throws.dexterity
-                </a>
-            </td>
-            <td>
-                <a href="#" class="roll" data-bonus="@Model.saving_throws.constitution">
-                    @Model.saving_throws.constitution
-                </a>
-            </td>
-            <td>
-                <a href="#" class="roll" data-bonus="@Model.saving_throws.intelligence">
-                    @Model.saving_throws.intelligence
-                </a>
-            </td>
-            <td>
-                <a href="#" class="roll" data-bonus="@Model.saving_throws.wisdom">
-                    @Model.saving_throws.wisdom
-                </a>
-            </td>
-            <td>
-                <a href="#" class="roll" data-bonus="@Model.saving_throws.charisma">
-                    @Model.saving_throws.charisma
-                </a>
-            </td>
-        </tr>
 
-    </table>
+    <div class="grid-table stats-grid">
+        <div class="cell header">Сила</div>
+        <div class="cell header">Ловкость</div>
+        <div class="cell header">Выносливость</div>
+        <div class="cell header">Интеллект</div>
+        <div class="cell header">Магия</div>
+        <div class="cell header">Харизма</div>
+
+        <div class="cell">@Model.ability_scores.strength</div>
+        <div class="cell">@Model.ability_scores.dexterity</div>
+        <div class="cell">@Model.ability_scores.constitution</div>
+        <div class="cell">@Model.ability_scores.intelligence</div>
+        <div class="cell">@Model.ability_scores.wisdom</div>
+        <div class="cell">@Model.ability_scores.charisma</div>
+
+        <div class="cell">@Model.modifiers.strength</div>
+        <div class="cell">@Model.modifiers.dexterity</div>
+        <div class="cell">@Model.modifiers.constitution</div>
+        <div class="cell">@Model.modifiers.intelligence</div>
+        <div class="cell">@Model.modifiers.wisdom</div>
+        <div class="cell">@Model.modifiers.charisma</div>
+    </div>
+
+    <h3>Спасброски</h3>
+
+    <div class="grid-table saves-grid">
+        <div class="cell header">Сила</div>
+        <div class="cell header">Ловкость</div>
+        <div class="cell header">Выносливость</div>
+        <div class="cell header">Интеллект</div>
+        <div class="cell header">Магия</div>
+        <div class="cell header">Харизма</div>
+
+        <div class="cell">
+            <a href="#" class="roll" data-bonus="@Model.saving_throws.strength">
+                @Model.saving_throws.strength
+            </a>
+        </div>
+        <div class="cell">
+            <a href="#" class="roll" data-bonus="@Model.saving_throws.dexterity">
+                @Model.saving_throws.dexterity
+            </a>
+        </div>
+        <div class="cell">
+            <a href="#" class="roll" data-bonus="@Model.saving_throws.constitution">
+                @Model.saving_throws.constitution
+            </a>
+        </div>
+        <div class="cell">
+            <a href="#" class="roll" data-bonus="@Model.saving_throws.intelligence">
+                @Model.saving_throws.intelligence
+            </a>
+        </div>
+        <div class="cell">
+            <a href="#" class="roll" data-bonus="@Model.saving_throws.wisdom">
+                @Model.saving_throws.wisdom
+            </a>
+        </div>
+        <div class="cell">
+            <a href="#" class="roll" data-bonus="@Model.saving_throws.charisma">
+                @Model.saving_throws.charisma
+            </a>
+        </div>
+    </div>
+
 
     <hr />
 
@@ -169,15 +165,16 @@
     <ul>
         @foreach (var prop in Model.skill_bonuses_all.GetType().GetProperties())
         {
-        var key = prop.Name;
-        var value = prop.GetValue(Model.skill_bonuses_all);
-        var ru = Model.skills_ru.ContainsKey(key) ? Model.skills_ru[key] : key;
+            var key = prop.Name;
+            var value = prop.GetValue(Model.skill_bonuses_all);
+            var ru = Model.skills_ru.ContainsKey(key) ? Model.skills_ru[key] : key;
 
-        <li><strong>@ru:</strong>
-            <a href="#" class="roll" data-bonus="@value">
-                @value
-            </a>
-        </li>
+            <li>
+                <strong>@ru:</strong>
+                <a href="#" class="roll" data-bonus="@value">
+                    @value
+                </a>
+            </li>
         }
     </ul>
 
