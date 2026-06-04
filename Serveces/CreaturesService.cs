@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Globalization;
+using System.Text.Json;
 using System.Threading.Tasks;
 using dndsitgen.Models;
 
@@ -18,6 +19,8 @@ namespace dndsitgen.Serveces
             string json = await httpResponse.Content.ReadAsStringAsync();
 
             JsonDocument doc = JsonDocument.Parse(json);
+            Console.WriteLine("JSON FROM API:\n" + json);
+
             return doc.RootElement.GetProperty("count").GetInt32();
         }
         public async Task<int> getCount()
@@ -42,21 +45,35 @@ namespace dndsitgen.Serveces
         }
 
         public async Task<CreatureModel> getRandomCreatureByCR(float cr) {
-            
-            int count = await getCount("challenge_rating="+cr);
-            int id = Random.Shared.Next() % count + 1;
 
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "https://api.open5e.com/v2/creatures/?limit=1&challenge_rating="+cr+"&page=" + id);
-            HttpResponseMessage httpResponse = await _httpClient.SendAsync(message);
-
-            string json = await httpResponse.Content.ReadAsStringAsync();
-            JsonDocument jsonDocument = JsonDocument.Parse(json);
-
-            JsonSerializerOptions options = new JsonSerializerOptions
+            try
             {
-                PropertyNameCaseInsensitive = true
-            };
-            return jsonDocument.RootElement.GetProperty("results").Deserialize<List<CreatureModel>>(options).First<CreatureModel>();
+                Console.WriteLine("[DEBUG]: " + cr);
+                string crStr = cr.ToString(CultureInfo.InvariantCulture);
+
+                int count = await getCount("challenge_rating=" + crStr);
+                int id = Random.Shared.Next() % count + 1;
+
+                HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "https://api.open5e.com/v2/creatures/?limit=1&challenge_rating=" + crStr + "&page=" + id);
+                HttpResponseMessage httpResponse = await _httpClient.SendAsync(message);
+
+                string json = await httpResponse.Content.ReadAsStringAsync();
+                JsonDocument jsonDocument = JsonDocument.Parse(json);
+
+                JsonSerializerOptions options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+                return jsonDocument.RootElement.GetProperty("results").Deserialize<List<CreatureModel>>(options).First<CreatureModel>();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("INNER EXCEPTION:\n" + e);
+                throw;
+            }
+
+
+
 
         }
         public async Task<CreatureModel> getCreatureByKey(string key)

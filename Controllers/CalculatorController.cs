@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 using System.Text.Json;
 using dndsitgen.Models;
 using dndsitgen.Serveces;
@@ -50,8 +51,9 @@ public class CalculatorController : Controller
 
             float[] heroCR = model.HeroCRInput
                 .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                .Select(s => float.Parse(s.Trim()))
+                .Select(s => float.Parse(s.Trim().Replace(',', '.'), CultureInfo.InvariantCulture))
                 .ToArray();
+
 
             model.HeroK = heroK;
             model.HeroCR = heroCR;
