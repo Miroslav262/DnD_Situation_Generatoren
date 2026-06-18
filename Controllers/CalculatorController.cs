@@ -100,19 +100,6 @@ public class CalculatorController : Controller
 
         }
 
-        StringBuilder prompt = new StringBuilder(
-            $"Придумай и коротко опиши D&D сцену (только обстоятельста и окружение, не надо рассказывать про ход битвы, название существ пиши на русском языке, отчёт о выполнении писать НЕ надо). Сценарий: {model.ScenaryDesc[model.SelectedScenary]}. Противники (способности существ описывай норативно): "
-        );
-
-                for (int i = 0; i < model.Monsters.Length; i++)
-                {
-                    prompt.Append($"{model.K[i]} шт — {model.Monsters[i].getEffectiveDescShort()}, ");
-                }
-
-        model.groqAnswer = await groq.AskAsync(prompt.ToString());
-
-        Console.WriteLine("PROMPT:\n" + prompt.ToString());
-        Console.WriteLine("ANSWER:\n" + model.groqAnswer);
 
 
         HttpContext.Session.SetString("LastModel", JsonSerializer.Serialize(model));

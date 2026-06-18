@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using dndsitgen.Models;
 using dndsitgen.Serveces;
+using dndsitgen.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dndsitgen.Controllers
@@ -9,9 +10,12 @@ namespace dndsitgen.Controllers
     public class CreatureController : Controller
     {
         private readonly CreaturesService _service;
+        private readonly CreatureRepository repository;
         private int? maxId = null;
-        public CreatureController(CreaturesService service) {
+        public CreatureController(CreaturesService service, CreatureRepository creatureRepository) {
             _service = service;
+            this.repository = creatureRepository;
+
 
         }
 
@@ -33,6 +37,11 @@ namespace dndsitgen.Controllers
         public async Task<IActionResult> CreatureByKey(string key)
         {
             return View("~/Views/Creature/Creature.cshtml", await _service.getCreatureByKey(key));
+        }
+        [HttpGet("/test")]
+        public IActionResult Test() {
+            this.repository.Test();
+            return Ok("done");
         }
 
     }

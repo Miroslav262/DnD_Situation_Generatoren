@@ -1,3 +1,4 @@
+using dndsitgen.Repository;
 using dndsitgen.Serveces;
 using dndsitgen.Services;
 
@@ -9,6 +10,11 @@ builder.Services.AddHttpClient<GroqService>();
 builder.Services.AddHttpClient<CreaturesService>();
 builder.Services.AddScoped<CreatureCalculatorService>();
 builder.Configuration.AddUserSecrets<Program>();
+
+string con_str = builder.Configuration.GetConnectionString("Default");
+
+builder.Services.AddSingleton(con_str);
+builder.Services.AddTransient<CreatureRepository>();
 
 builder.Services.AddSession();
 
