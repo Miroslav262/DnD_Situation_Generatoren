@@ -39,11 +39,16 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
-          mkdir -p /var/dpkeys
-          chmod 777 /var/dpkeys
-
+          mkdir -p ~/.dpkeys
           docker pull ${{ secrets.DOCKER_USERNAME }}/dndsitgen:latest
           docker stop dndsitgen || true
           docker rm dndsitgen || true
 
-          docker run -d  --name dndsitgen  --restart unless-stopped   -p 8082:8080  -v /var/dpkeys:/root/.aspnet/DataProtection-Keys   -e Groq__ApiKey=${{ secrets.GROQ_API_KEY }} -e ConnectionStrings__Default=${{ secrets.DB_CONNECTION_STRING }}  ${{ secrets.DOCKER_USERNAME }}/dndsitgen:latest
+          docker run -d \
+            --name dndsitgen \
+            --restart unless-stopped \
+            -p 8082:8080 \
+            -v ~/.dpkeys:/root/.aspnet/DataProtection-Keys \
+            -e Groq__ApiKey=${{ secrets.GROQ_API_KEY }} \
+            -e ConnectionStrings__Default="${{ secrets.DB_CONNECTION_STRING }}" \
+            ${{ secrets.DOCKER_USERNAME }}/dndsitgen:latest
