@@ -1,6 +1,9 @@
 using dndsitgen.Repository;
 using dndsitgen.Serveces;
 using dndsitgen.Services;
+using Dapper;
+
+Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
 var builder = WebApplication.CreateBuilder(args);
 

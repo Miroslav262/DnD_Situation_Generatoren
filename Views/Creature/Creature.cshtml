@@ -1,164 +1,242 @@
 ﻿@model dndsitgen.Models.CreatureModel
 
-<h1>Creature Debug</h1>
+<div class="container mt-4">
 
-<hr />
+    <h1>@Model.Name</h1>
 
-<h2>Основное</h2>
+    @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+    {
+        <img src="@Model.ImageUrl"
+             alt="@Model.Name"
+             style="max-width:300px;"
+             class="mb-3" />
+    }
 
-<ul>
-    <li>Id: @Model.Id</li>
-    <li>Name: @Model.Name</li>
-    <li>ImageUrl: @Model.ImageUrl</li>
-    <li>Description: @Model.Description</li>
+    @if (!string.IsNullOrWhiteSpace(Model.Description))
+    {
+        <p>@Model.Description</p>
+    }
 
-    <li>SizeId: @Model.SizeId</li>
-    <li>TypeId: @Model.TypeId</li>
-    <li>AlignmentId: @Model.AlignmentId</li>
+    <hr />
 
-    <li>Ac: @Model.Ac</li>
+    <h2>Основная информация</h2>
 
-    <li>HpDefault: @Model.HpDefault</li>
-    <li>HpDice: @Model.HpDice</li>
-    <li>HpDiceCount: @Model.HpDiceCount</li>
-    <li>HpAddition: @Model.HpAddition</li>
+    <table class="table table-bordered">
+        <tbody>
+            <tr><th>Id</th><td>@Model.Id</td></tr>
+            <tr><th>Размер</th><td>@Model.Size?.Name</td></tr>
+            <tr><th>Тип</th><td>@Model.Type?.Name</td></tr>
+            <tr><th>Мировоззрение</th><td>@Model.Alignment?.Name</td></tr>
+            <tr><th>CR</th><td>@Model.ChallengeRating?.Cr</td></tr>
+            <tr><th>EXP</th><td>@Model.ChallengeRating?.Exp</td></tr>
+            <tr><th>Источник</th><td>@Model.Source?.Name</td></tr>
 
-    <li>Passive: @Model.Passive</li>
+            <tr><th>AC</th><td>@Model.Ac</td></tr>
 
-    <li>CrId: @Model.CrId</li>
-    <li>SourceId: @Model.SourceId</li>
+            <tr>
+                <th>HP</th>
+                <td>
+                    @Model.HpDefault
+                    (@Model.HpDiceCount d @Model.HpDice + @Model.HpAddition)
+                </td>
+            </tr>
 
-</ul>
+            <tr><th>Passive</th><td>@Model.Passive</td></tr>
+        </tbody>
+    </table>
 
-<hr />
+    <hr />
 
-<h2>Характеристики</h2>
+    <h2>Характеристики</h2>
 
-<table border="1">
-    <tr>
-        <th>STR</th>
-        <th>DEX</th>
-        <th>CON</th>
-        <th>INT</th>
-        <th>WIS</th>
-        <th>CHA</th>
-    </tr>
-    <tr>
-        <td>@Model.Strength</td>
-        <td>@Model.Dexterity</td>
-        <td>@Model.Constitution</td>
-        <td>@Model.Intelligence</td>
-        <td>@Model.Wisdom</td>
-        <td>@Model.Charisma</td>
-    </tr>
-</table>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>STR</th>
+                <th>DEX</th>
+                <th>CON</th>
+                <th>INT</th>
+                <th>WIS</th>
+                <th>CHA</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Model.Strength</td>
+                <td>@Model.Dexterity</td>
+                <td>@Model.Constitution</td>
+                <td>@Model.Intelligence</td>
+                <td>@Model.Wisdom</td>
+                <td>@Model.Charisma</td>
+            </tr>
+        </tbody>
+    </table>
 
-<hr />
+    <hr />
 
-<h2>Спасброски</h2>
+    <h2>Спасброски</h2>
 
-<table border="1">
-    <tr>
-        <th>STR</th>
-        <th>DEX</th>
-        <th>CON</th>
-        <th>INT</th>
-        <th>WIS</th>
-        <th>CHA</th>
-    </tr>
-    <tr>
-        <td>@Model.SavingStrength</td>
-        <td>@Model.SavingDexterity</td>
-        <td>@Model.SavingConstitution</td>
-        <td>@Model.SavingIntelligence</td>
-        <td>@Model.SavingWisdom</td>
-        <td>@Model.SavingCharisma</td>
-    </tr>
-</table>
+    <ul>
+        <li>STR: @Model.SavingStrength</li>
+        <li>DEX: @Model.SavingDexterity</li>
+        <li>CON: @Model.SavingConstitution</li>
+        <li>INT: @Model.SavingIntelligence</li>
+        <li>WIS: @Model.SavingWisdom</li>
+        <li>CHA: @Model.SavingCharisma</li>
+    </ul>
 
-<hr />
+    <hr />
 
-<h2>Навыки</h2>
+    <h2>Навыки</h2>
 
-<ul>
-    <li>Acrobatics: @Model.Acrobatics</li>
-    <li>AnimalHandling: @Model.AnimalHandling</li>
-    <li>Arcana: @Model.Arcana</li>
-    <li>Athletics: @Model.Athletics</li>
-    <li>Deception: @Model.Deception</li>
-    <li>History: @Model.History</li>
-    <li>Insight: @Model.Insight</li>
-    <li>Intimidation: @Model.Intimidation</li>
-    <li>Investigation: @Model.Investigation</li>
-    <li>Medicine: @Model.Medicine</li>
-    <li>Nature: @Model.Nature</li>
-    <li>Perception: @Model.Perception</li>
-    <li>Performance: @Model.Performance</li>
-    <li>Persuasion: @Model.Persuasion</li>
-    <li>Religion: @Model.Religion</li>
-    <li>SleightOfHand: @Model.SleightOfHand</li>
-    <li>Stealth: @Model.Stealth</li>
-    <li>Survival: @Model.Survival</li>
-</ul>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr><th>Acrobatics</th><td>@Model.Acrobatics</td></tr>
+            <tr><th>Animal Handling</th><td>@Model.AnimalHandling</td></tr>
+            <tr><th>Arcana</th><td>@Model.Arcana</td></tr>
+            <tr><th>Athletics</th><td>@Model.Athletics</td></tr>
+            <tr><th>Deception</th><td>@Model.Deception</td></tr>
+            <tr><th>History</th><td>@Model.History</td></tr>
+            <tr><th>Insight</th><td>@Model.Insight</td></tr>
+            <tr><th>Intimidation</th><td>@Model.Intimidation</td></tr>
+            <tr><th>Investigation</th><td>@Model.Investigation</td></tr>
+            <tr><th>Medicine</th><td>@Model.Medicine</td></tr>
+            <tr><th>Nature</th><td>@Model.Nature</td></tr>
+            <tr><th>Perception</th><td>@Model.Perception</td></tr>
+            <tr><th>Performance</th><td>@Model.Performance</td></tr>
+            <tr><th>Persuasion</th><td>@Model.Persuasion</td></tr>
+            <tr><th>Religion</th><td>@Model.Religion</td></tr>
+            <tr><th>Sleight Of Hand</th><td>@Model.SleightOfHand</td></tr>
+            <tr><th>Stealth</th><td>@Model.Stealth</td></tr>
+            <tr><th>Survival</th><td>@Model.Survival</td></tr>
+        </tbody>
+    </table>
 
-<hr />
+    <hr />
 
-<h2>Скорости</h2>
+    <h2>Скорость</h2>
 
-<ul>
-    <li>SpeedUnitId: @Model.SpeedUnitId</li>
+    <ul>
+        <li>Unit: @Model.SpeedUnit?.Name</li>
+        <li>Walk: @Model.Walk</li>
+        <li>Crawl: @Model.Crawl</li>
+        <li>Hover: @Model.Hover</li>
+        <li>Fly: @Model.Fly</li>
+        <li>Burrow: @Model.Burrow</li>
+        <li>Climb: @Model.Climb</li>
+        <li>Swim: @Model.Swim</li>
+    </ul>
 
-    <li>Walk: @Model.Walk</li>
-    <li>Crawl: @Model.Crawl</li>
-    <li>Hover: @Model.Hover</li>
-    <li>Fly: @Model.Fly</li>
-    <li>Burrow: @Model.Burrow</li>
-    <li>Climb: @Model.Climb</li>
-    <li>Swim: @Model.Swim</li>
+    <hr />
 
-</ul>
+    <h2>Чувства</h2>
 
-<hr />
+    <ul>
+        <li>Unit: @Model.SenseUnit?.Name</li>
+        <li>Darkvision: @Model.DarkvisionRange</li>
+        <li>Blindsight: @Model.BlindsightRange</li>
+        <li>Tremorsense: @Model.TremorsenseRange</li>
+        <li>Truesight: @Model.TruesightRange</li>
+    </ul>
 
-<h2>Зрение</h2>
+    <hr />
 
-<ul>
-    <li>CreatureSensesUnitId: @Model.CreatureSensesUnitId</li>
+    <h2>Языки</h2>
 
-    <li>DarkvisionRange: @Model.DarkvisionRange</li>
-    <li>BlindsightRange: @Model.BlindsightRange</li>
-    <li>TremorsenseRange: @Model.TremorsenseRange</li>
-    <li>TruesightRange: @Model.TruesightRange</li>
+    <ul>
+        @foreach (var item in Model.Languages)
+        {
+            <li>@item.Name</li>
+        }
+    </ul>
 
-</ul>
+    <h2>Биомы</h2>
 
-<hr />
+    <ul>
+        @foreach (var item in Model.Biomes)
+        {
+            <li>@item.Name</li>
+        }
+    </ul>
 
-<h2>Коллекции</h2>
+    <h2>Иммунитеты к урону</h2>
 
-<p><b>LanguageIds</b></p>
-<pre>@string.Join(", ", Model.LanguageIds)</pre>
+    <ul>
+        @foreach (var item in Model.DamageImmunities)
+        {
+            <li>@item.Name</li>
+        }
+    </ul>
 
-<p><b>TraitIds</b></p>
-<pre>@string.Join(", ", Model.TraitIds)</pre>
+    <h2>Сопротивления</h2>
 
-<p><b>ActionIds</b></p>
-<pre>@string.Join(", ", Model.ActionIds)</pre>
+    <ul>
+        @foreach (var item in Model.DamageResistances)
+        {
+            <li>@item.Name</li>
+        }
+    </ul>
 
-<p><b>LegendaryIds</b></p>
-<pre>@string.Join(", ", Model.LegendaryIds)</pre>
+    <h2>Уязвимости</h2>
 
-<p><b>BiomeIds</b></p>
-<pre>@string.Join(", ", Model.BiomeIds)</pre>
+    <ul>
+        @foreach (var item in Model.DamageVulnerabilities)
+        {
+            <li>@item.Name</li>
+        }
+    </ul>
 
-<p><b>DamageImmunityIds</b></p>
-<pre>@string.Join(", ", Model.DamageImmunityIds)</pre>
+    <h2>Иммунитеты к состояниям</h2>
 
-<p><b>DamageResistanceIds</b></p>
-<pre>@string.Join(", ", Model.DamageResistanceIds)</pre>
+    <ul>
+        @foreach (var item in Model.ConditionImmunities)
+        {
+            <li>@item.Name</li>
+        }
+    </ul>
 
-<p><b>DamageVulnerabilityIds</b></p>
-<pre>@string.Join(", ", Model.DamageVulnerabilityIds)</pre>
+    <hr />
 
-<p><b>ConditionImmunityIds</b></p>
-<pre>@string.Join(", ", Model.ConditionImmunityIds)</pre>
+    <h2>Особенности</h2>
+
+    @foreach (var trait in Model.Traits)
+    {
+        <div class="card mb-2">
+            <div class="card-header">
+                @trait.Name
+            </div>
+            <div class="card-body">
+                @trait.Text
+            </div>
+        </div>
+    }
+
+    <h2>Действия</h2>
+
+    @foreach (var action in Model.Actions)
+    {
+        <div class="card mb-2">
+            <div class="card-header">
+                @action.Name
+            </div>
+            <div class="card-body">
+                @action.Text
+            </div>
+        </div>
+    }
+
+    <h2>Легендарные действия</h2>
+
+    @foreach (var legendary in Model.Legendaries)
+    {
+        <div class="card mb-2">
+            <div class="card-header">
+                @legendary.Name
+            </div>
+            <div class="card-body">
+                @legendary.Text
+            </div>
+        </div>
+    }
+
+</div>

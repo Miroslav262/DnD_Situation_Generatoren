@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Npgsql;
 using dndsitgen.Models;
+using Dapper;
 
 namespace dndsitgen.Repository
 {
@@ -33,93 +34,231 @@ namespace dndsitgen.Repository
 
         public async Task<CreatureModel?> GetByIdAsync(long id)
         {
-            await using NpgsqlConnection connection = new NpgsqlConnection(con_str);
+            await using var connection = new NpgsqlConnection(con_str);
 
             try
             {
-                connection.Open();
-                const string query = """
-                     SELECT * FROM creature WHERE id = @id 
-                    """;
+                await connection.OpenAsync();
 
-                NpgsqlCommand command = new NpgsqlCommand(query, connection);
-                command.Parameters.AddWithValue("id", id);
+                var creatureEntity = await connection.QueryFirstOrDefaultAsync<CreatureEntity>(
+                    @"SELECT *
+              FROM ""creature""
+              WHERE id = @Id",
+                    new { Id = id });
 
-                await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
-
-                if (!await reader.ReadAsync())
+                if (creatureEntity == null)
                     return null;
-                return MapCreature(reader);
+
+                var creatureSize = await connection.QueryFirstOrDefaultAsync<CreatureSize>(
+                    @"SELECT *
+              FROM ""creature_size""
+              WHERE id = @Id",
+                    new { Id = creatureEntity.SizeId });
+
+                var creatureCr = await connection.QueryFirstOrDefaultAsync<CreatureCr>(
+                    @"SELECT *
+              FROM ""creature_cr""
+              WHERE id = @Id",
+                    new { Id = creatureEntity.CrId });
+
+                var creatureSource = creatureEntity.SourceId == null
+                    ? null
+                    : await connection.QueryFirstOrDefaultAsync<LookupItem>(
+                        @"SELECT *
+                  FROM ""creature_source""
+                  WHERE id = @Id",
+                        new { Id = creatureEntity.SourceId });
+
+                var creatureType = await connection.QueryFirstOrDefaultAsync<LookupItem>(
+                    @"SELECT *
+              FROM ""creature_type""
+              WHERE id = @Id",
+                    new { Id = creatureEntity.TypeId });
+
+                var creatureAlignment = await connection.QueryFirstOrDefaultAsync<LookupItem>(
+                    @"SELECT *
+              FROM ""creature_alignment""
+              WHERE id = @Id",
+                    new { Id = creatureEntity.AlignmentId });
+
+                var speedUnit = await connection.QueryFirstOrDefaultAsync<LookupItem>(
+                    @"SELECT *
+              FROM ""unit""
+              WHERE id = @Id",
+                    new { Id = creatureEntity.SpeedUnitId });
+
+                var senseUnit = await connection.QueryFirstOrDefaultAsync<LookupItem>(
+                    @"SELECT *
+              FROM ""unit""
+              WHERE id = @Id",
+                    new { Id = creatureEntity.CreatureSensesUnitId });
+
+                var languages = (await connection.QueryAsync<LookupItem>(
+                    @"SELECT l.*
+              FROM ""creature_languages"" l
+              INNER JOIN ""creature_languages_ratio"" clr
+                ON clr.language_id = l.id
+              WHERE clr.creature_id = @CreatureId",
+                    new { CreatureId = creatureEntity.Id }))
+                    .ToList();
+
+                var traits = (await connection.QueryAsync<CreatureTrait>(
+                    @"SELECT t.*
+              FROM ""creature_trait"" t
+              INNER JOIN ""creature_trait_ratio"" ctr
+                ON ctr.trait_id = t.id
+              WHERE ctr.creature_id = @CreatureId",
+                    new { CreatureId = creatureEntity.Id }))
+                    .ToList();
+
+                var actions = (await connection.QueryAsync<CreatureAction>(
+                    @"SELECT a.*
+              FROM ""creature_action"" a
+              INNER JOIN ""creature_action_ratio"" car
+                ON car.action_id = a.id
+              WHERE car.creature_id = @CreatureId",
+                    new { CreatureId = creatureEntity.Id }))
+                    .ToList();
+
+                var legendaries = (await connection.QueryAsync<CreatureLegendary>(
+                    @"SELECT l.*
+              FROM ""creature_legendary"" l
+              INNER JOIN ""creature_legendary_ratio"" clr
+                ON clr.legendary_id = l.id
+              WHERE clr.creature_id = @CreatureId",
+                    new { CreatureId = creatureEntity.Id }))
+                    .ToList();
+
+                var biomes = (await connection.QueryAsync<LookupItem>(
+                    @"SELECT b.*
+              FROM ""creature_biomes"" b
+              INNER JOIN ""creature_biome_ratio"" cbr
+                ON cbr.biome_id = b.id
+              WHERE cbr.creature_id = @CreatureId",
+                    new { CreatureId = creatureEntity.Id }))
+                    .ToList();
+
+                var damageImmunities = (await connection.QueryAsync<LookupItem>(
+                    @"SELECT dt.*
+              FROM ""damage_type"" dt
+              INNER JOIN ""creature_damage_immunities"" cdi
+                ON cdi.damage_type_id = dt.id
+              WHERE cdi.creature_id = @CreatureId",
+                    new { CreatureId = creatureEntity.Id }))
+                    .ToList();
+
+                var damageResistances = (await connection.QueryAsync<LookupItem>(
+                    @"SELECT dt.*
+              FROM ""damage_type"" dt
+              INNER JOIN ""creature_damage_resistances"" cdr
+                ON cdr.damage_type_id = dt.id
+              WHERE cdr.creature_id = @CreatureId",
+                    new { CreatureId = creatureEntity.Id }))
+                    .ToList();
+
+                var damageVulnerabilities = (await connection.QueryAsync<LookupItem>(
+                    @"SELECT dt.*
+              FROM ""damage_type"" dt
+              INNER JOIN ""creature_damage_vulnerabilities"" cdv
+                ON cdv.damage_type_id = dt.id
+              WHERE cdv.creature_id = @CreatureId",
+                    new { CreatureId = creatureEntity.Id }))
+                    .ToList();
+
+                var conditionImmunities = (await connection.QueryAsync<LookupItem>(
+                    @"SELECT ct.*
+              FROM ""condition_type"" ct
+              INNER JOIN ""creature_condition_immunities"" cci
+                ON cci.condition_type_id = ct.id
+              WHERE cci.creature_id = @CreatureId",
+                    new { CreatureId = creatureEntity.Id }))
+                    .ToList();
+
+                return new CreatureModel
+                {
+                    Id = creatureEntity.Id,
+                    Name = creatureEntity.Name,
+                    ImageUrl = creatureEntity.ImageUrl,
+                    Description = creatureEntity.Description,
+
+                    Size = creatureSize,
+                    Type = creatureType,
+                    Alignment = creatureAlignment,
+                    ChallengeRating = creatureCr,
+                    Source = creatureSource,
+
+                    Ac = creatureEntity.Ac,
+                    HpDefault = creatureEntity.HpDefault,
+                    HpDice = creatureEntity.HpDice,
+                    HpDiceCount = creatureEntity.HpDiceCount,
+                    HpAddition = creatureEntity.HpAddition,
+                    Passive = creatureEntity.Passive,
+
+                    Strength = creatureEntity.Strength,
+                    Dexterity = creatureEntity.Dexterity,
+                    Constitution = creatureEntity.Constitution,
+                    Intelligence = creatureEntity.Intelligence,
+                    Wisdom = creatureEntity.Wisdom,
+                    Charisma = creatureEntity.Charisma,
+
+                    SavingStrength = creatureEntity.SavingStrength,
+                    SavingDexterity = creatureEntity.SavingDexterity,
+                    SavingConstitution = creatureEntity.SavingConstitution,
+                    SavingIntelligence = creatureEntity.SavingIntelligence,
+                    SavingWisdom = creatureEntity.SavingWisdom,
+                    SavingCharisma = creatureEntity.SavingCharisma,
+
+                    Acrobatics = creatureEntity.Acrobatics,
+                    AnimalHandling = creatureEntity.AnimalHandling,
+                    Arcana = creatureEntity.Arcana,
+                    Athletics = creatureEntity.Athletics,
+                    Deception = creatureEntity.Deception,
+                    History = creatureEntity.History,
+                    Insight = creatureEntity.Insight,
+                    Intimidation = creatureEntity.Intimidation,
+                    Investigation = creatureEntity.Investigation,
+                    Medicine = creatureEntity.Medicine,
+                    Nature = creatureEntity.Nature,
+                    Perception = creatureEntity.Perception,
+                    Performance = creatureEntity.Performance,
+                    Persuasion = creatureEntity.Persuasion,
+                    Religion = creatureEntity.Religion,
+                    SleightOfHand = creatureEntity.SleightOfHand,
+                    Stealth = creatureEntity.Stealth,
+                    Survival = creatureEntity.Survival,
+
+                    SpeedUnit = speedUnit,
+                    Walk = creatureEntity.Walk,
+                    Crawl = creatureEntity.Crawl,
+                    Hover = creatureEntity.Hover,
+                    Fly = creatureEntity.Fly,
+                    Burrow = creatureEntity.Burrow,
+                    Climb = creatureEntity.Climb,
+                    Swim = creatureEntity.Swim,
+
+                    SenseUnit = senseUnit,
+                    DarkvisionRange = creatureEntity.DarkvisionRange,
+                    BlindsightRange = creatureEntity.BlindsightRange,
+                    TremorsenseRange = creatureEntity.TremorsenseRange,
+                    TruesightRange = creatureEntity.TruesightRange,
+
+                    Languages = languages,
+                    Traits = traits,
+                    Actions = actions,
+                    Legendaries = legendaries,
+                    Biomes = biomes,
+
+                    DamageImmunities = damageImmunities,
+                    DamageResistances = damageResistances,
+                    DamageVulnerabilities = damageVulnerabilities,
+                    ConditionImmunities = conditionImmunities
+                };
             }
             catch (Exception e)
             {
-                logger.LogError(e, "Failed to open connection");
+                logger.LogError(e, "Failed to load creature {CreatureId}", id);
                 return null;
             }
-        }
-        private static CreatureModel MapCreature(NpgsqlDataReader reader)
-        {
-            return new CreatureModel
-            {
-                Id = reader.GetInt32(reader.GetOrdinal("id")),
-                Name = reader.GetString(reader.GetOrdinal("name")),
-                ImageUrl = reader["image_url"] as string,
-                Description = reader["description"] as string,
-                SizeId = reader.GetInt32(reader.GetOrdinal("size_id")),
-                TypeId = reader.GetInt32(reader.GetOrdinal("type_id")),
-                AlignmentId = reader.GetInt32(reader.GetOrdinal("alignment_id")),
-                Ac = reader.GetInt32(reader.GetOrdinal("ac")),
-                HpDefault = reader.IsDBNull(reader.GetOrdinal("hp_default")) ? null : reader.GetInt32(reader.GetOrdinal("hp_default")),
-                HpDice = reader.GetInt32(reader.GetOrdinal("hp_dice")),
-                HpDiceCount = reader.GetInt32(reader.GetOrdinal("hp_dice_count")),
-                HpAddition = reader.GetInt32(reader.GetOrdinal("hp_addition")),
-                Passive = reader.GetInt32(reader.GetOrdinal("passive")),
-                CrId = reader.GetInt32(reader.GetOrdinal("cr_id")),
-                SourceId = reader.IsDBNull(reader.GetOrdinal("source_id")) ? null : reader.GetInt32(reader.GetOrdinal("source_id")),
-                Strength = reader.GetInt32(reader.GetOrdinal("strength")),
-                Dexterity = reader.GetInt32(reader.GetOrdinal("dexterity")),
-                Constitution = reader.GetInt32(reader.GetOrdinal("constitution")),
-                Intelligence = reader.GetInt32(reader.GetOrdinal("intelligence")),
-                Wisdom = reader.GetInt32(reader.GetOrdinal("wisdom")),
-                Charisma = reader.GetInt32(reader.GetOrdinal("charisma")),
-                SavingStrength = reader.GetInt32(reader.GetOrdinal("saving_strength")),
-                SavingDexterity = reader.GetInt32(reader.GetOrdinal("saving_dexterity")),
-                SavingConstitution = reader.GetInt32(reader.GetOrdinal("saving_constitution")),
-                SavingIntelligence = reader.GetInt32(reader.GetOrdinal("saving_intelligence")),
-                SavingWisdom = reader.GetInt32(reader.GetOrdinal("saving_wisdom")),
-                SavingCharisma = reader.GetInt32(reader.GetOrdinal("saving_charisma")),
-                Acrobatics = reader.GetInt32(reader.GetOrdinal("acrobatics")),
-                AnimalHandling = reader.GetInt32(reader.GetOrdinal("animal_handling")),
-                Arcana = reader.GetInt32(reader.GetOrdinal("arcana")),
-                Athletics = reader.GetInt32(reader.GetOrdinal("athletics")),
-                Deception = reader.GetInt32(reader.GetOrdinal("deception")),
-                History = reader.GetInt32(reader.GetOrdinal("history")),
-                Insight = reader.GetInt32(reader.GetOrdinal("insight")),
-                Intimidation = reader.GetInt32(reader.GetOrdinal("intimidation")),
-                Investigation = reader.GetInt32(reader.GetOrdinal("investigation")),
-                Medicine = reader.GetInt32(reader.GetOrdinal("medicine")),
-                Nature = reader.GetInt32(reader.GetOrdinal("nature")),
-                Perception = reader.GetInt32(reader.GetOrdinal("perception")),
-                Performance = reader.GetInt32(reader.GetOrdinal("performance")),
-                Persuasion = reader.GetInt32(reader.GetOrdinal("persuasion")),
-                Religion = reader.GetInt32(reader.GetOrdinal("religion")),
-                SleightOfHand = reader.GetInt32(reader.GetOrdinal("sleight_of_hand")),
-                Stealth = reader.GetInt32(reader.GetOrdinal("stealth")),
-                Survival = reader.GetInt32(reader.GetOrdinal("survival")),
-                SpeedUnitId = reader.GetInt32(reader.GetOrdinal("speed_unit_id")),
-                Walk = reader["walk"] as int?,
-                Crawl = reader["crawl"] as int?,
-                Hover = reader["hover"] as int?,
-                Fly = reader["fly"] as int?,
-                Burrow = reader["burrow"] as int?,
-                Climb = reader["climb"] as int?,
-                Swim = reader["swim"] as int?,
-                CreatureSensesUnitId = reader.GetInt32(reader.GetOrdinal("creature_senses_unit_id")),
-                DarkvisionRange = reader["darkvision_range"] as int?,
-                BlindsightRange = reader["blindsight_range"] as int?,
-                TremorsenseRange = reader["tremorsense_range"] as int?,
-                TruesightRange = reader["truesight_range"] as int?
-            };
         }
     }
 }
