@@ -1,10 +1,164 @@
 ﻿@model dndsitgen.Models.CreatureModel
 
-<script src="~/js/Creature/creature.js"></script>
-<link rel="stylesheet" href="~/css/Creature/creature.css" />
+<h1>Creature Debug</h1>
 
-<div class="container mt-4">
+<hr />
 
-    
+<h2>Основное</h2>
 
-</div>
+<ul>
+    <li>Id: @Model.Id</li>
+    <li>Name: @Model.Name</li>
+    <li>ImageUrl: @Model.ImageUrl</li>
+    <li>Description: @Model.Description</li>
+
+    <li>SizeId: @Model.SizeId</li>
+    <li>TypeId: @Model.TypeId</li>
+    <li>AlignmentId: @Model.AlignmentId</li>
+
+    <li>Ac: @Model.Ac</li>
+
+    <li>HpDefault: @Model.HpDefault</li>
+    <li>HpDice: @Model.HpDice</li>
+    <li>HpDiceCount: @Model.HpDiceCount</li>
+    <li>HpAddition: @Model.HpAddition</li>
+
+    <li>Passive: @Model.Passive</li>
+
+    <li>CrId: @Model.CrId</li>
+    <li>SourceId: @Model.SourceId</li>
+
+</ul>
+
+<hr />
+
+<h2>Характеристики</h2>
+
+<table border="1">
+    <tr>
+        <th>STR</th>
+        <th>DEX</th>
+        <th>CON</th>
+        <th>INT</th>
+        <th>WIS</th>
+        <th>CHA</th>
+    </tr>
+    <tr>
+        <td>@Model.Strength</td>
+        <td>@Model.Dexterity</td>
+        <td>@Model.Constitution</td>
+        <td>@Model.Intelligence</td>
+        <td>@Model.Wisdom</td>
+        <td>@Model.Charisma</td>
+    </tr>
+</table>
+
+<hr />
+
+<h2>Спасброски</h2>
+
+<table border="1">
+    <tr>
+        <th>STR</th>
+        <th>DEX</th>
+        <th>CON</th>
+        <th>INT</th>
+        <th>WIS</th>
+        <th>CHA</th>
+    </tr>
+    <tr>
+        <td>@Model.SavingStrength</td>
+        <td>@Model.SavingDexterity</td>
+        <td>@Model.SavingConstitution</td>
+        <td>@Model.SavingIntelligence</td>
+        <td>@Model.SavingWisdom</td>
+        <td>@Model.SavingCharisma</td>
+    </tr>
+</table>
+
+<hr />
+
+<h2>Навыки</h2>
+
+<ul>
+    <li>Acrobatics: @Model.Acrobatics</li>
+    <li>AnimalHandling: @Model.AnimalHandling</li>
+    <li>Arcana: @Model.Arcana</li>
+    <li>Athletics: @Model.Athletics</li>
+    <li>Deception: @Model.Deception</li>
+    <li>History: @Model.History</li>
+    <li>Insight: @Model.Insight</li>
+    <li>Intimidation: @Model.Intimidation</li>
+    <li>Investigation: @Model.Investigation</li>
+    <li>Medicine: @Model.Medicine</li>
+    <li>Nature: @Model.Nature</li>
+    <li>Perception: @Model.Perception</li>
+    <li>Performance: @Model.Performance</li>
+    <li>Persuasion: @Model.Persuasion</li>
+    <li>Religion: @Model.Religion</li>
+    <li>SleightOfHand: @Model.SleightOfHand</li>
+    <li>Stealth: @Model.Stealth</li>
+    <li>Survival: @Model.Survival</li>
+</ul>
+
+<hr />
+
+<h2>Скорости</h2>
+
+<ul>
+    <li>SpeedUnitId: @Model.SpeedUnitId</li>
+
+    <li>Walk: @Model.Walk</li>
+    <li>Crawl: @Model.Crawl</li>
+    <li>Hover: @Model.Hover</li>
+    <li>Fly: @Model.Fly</li>
+    <li>Burrow: @Model.Burrow</li>
+    <li>Climb: @Model.Climb</li>
+    <li>Swim: @Model.Swim</li>
+
+</ul>
+
+<hr />
+
+<h2>Зрение</h2>
+
+<ul>
+    <li>CreatureSensesUnitId: @Model.CreatureSensesUnitId</li>
+
+    <li>DarkvisionRange: @Model.DarkvisionRange</li>
+    <li>BlindsightRange: @Model.BlindsightRange</li>
+    <li>TremorsenseRange: @Model.TremorsenseRange</li>
+    <li>TruesightRange: @Model.TruesightRange</li>
+
+</ul>
+
+<hr />
+
+<h2>Коллекции</h2>
+
+<p><b>LanguageIds</b></p>
+<pre>@string.Join(", ", Model.LanguageIds)</pre>
+
+<p><b>TraitIds</b></p>
+<pre>@string.Join(", ", Model.TraitIds)</pre>
+
+<p><b>ActionIds</b></p>
+<pre>@string.Join(", ", Model.ActionIds)</pre>
+
+<p><b>LegendaryIds</b></p>
+<pre>@string.Join(", ", Model.LegendaryIds)</pre>
+
+<p><b>BiomeIds</b></p>
+<pre>@string.Join(", ", Model.BiomeIds)</pre>
+
+<p><b>DamageImmunityIds</b></p>
+<pre>@string.Join(", ", Model.DamageImmunityIds)</pre>
+
+<p><b>DamageResistanceIds</b></p>
+<pre>@string.Join(", ", Model.DamageResistanceIds)</pre>
+
+<p><b>DamageVulnerabilityIds</b></p>
+<pre>@string.Join(", ", Model.DamageVulnerabilityIds)</pre>
+
+<p><b>ConditionImmunityIds</b></p>
+<pre>@string.Join(", ", Model.ConditionImmunityIds)</pre>

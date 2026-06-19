@@ -21,12 +21,11 @@ namespace dndsitgen.Controllers
 
         [HttpGet("/creature/random_creature")]
         public async Task<IActionResult> RandomCreature() {
-            if (maxId == null) {
-                maxId = await _service.getCount();
-            }
-            int randomId = Random.Shared.Next(1, maxId.Value + 1);
-            return View("~/Views/Creature/Creature.cshtml", await _service.getCreature(randomId));
+
+            int randomId = Random.Shared.Next(1, 30);
+            return View("~/Views/Creature/Creature.cshtml", await repository.GetByIdAsync(randomId));
         }
+
         [HttpPost("/creature")]
         public async Task<IActionResult> Creature(CreatureModel creatureModel)
         {
