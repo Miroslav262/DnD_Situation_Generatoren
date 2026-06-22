@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace dndsitgen.Controllers
 {
+    [ApiController]
     public class CreatureController : Controller
     {
         private readonly CreaturesService _service;
@@ -19,25 +20,25 @@ namespace dndsitgen.Controllers
 
         }
 
-        [HttpGet("/creature/random_creature")]
+        [HttpGet("creature/random_creature")]
         public async Task<IActionResult> RandomCreature() {
 
             int randomId = Random.Shared.Next(1, 30);
             return View("~/Views/Creature/Creature.cshtml", await repository.GetByIdAsync(randomId));
         }
 
-        [HttpPost("/creature")]
+        [HttpPost("creature")]
         public async Task<IActionResult> Creature(CreatureModel creatureModel)
         {
             return View("~/Views/Creature/Creature.cshtml", creatureModel);
         }
 
-        [HttpGet("/creature/{key}")]
+        [HttpGet("creature/{key}")]
         public async Task<IActionResult> CreatureByKey(string key)
         {
             return View("~/Views/Creature/Creature.cshtml", await _service.getCreatureByKey(key));
         }
-        [HttpGet("/test")]
+        [HttpGet("test")]
         public IActionResult Test() {
             this.repository.Test();
             return Ok("done");

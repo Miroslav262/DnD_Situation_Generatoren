@@ -19,7 +19,7 @@ namespace dndsitgen.Controllers
             this.jwtService = jwtService;
         }
 
-        [HttpPost("/user")]
+        [HttpPost("user")]
         public async Task<IActionResult> Create([FromBody]UserModel request)
         {
             if (string.IsNullOrEmpty(request.name) || string.IsNullOrEmpty(request.pass_hash))
@@ -37,7 +37,7 @@ namespace dndsitgen.Controllers
                 });
             }
         }
-        [HttpPost("/user/login")]
+        [HttpPost("user/login")]
         public async Task<IActionResult> Login([FromBody]LoginRequest request) {
             bool? isValid = await userRepository.checkUser(new UserModel
             {

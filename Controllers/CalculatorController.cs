@@ -7,6 +7,8 @@ using dndsitgen.Serveces.Scenaries;
 using dndsitgen.Services;
 using dndsitgen.Utils;
 using Microsoft.AspNetCore.Mvc;
+
+[ApiController]
 public class CalculatorController : Controller
 {
     private readonly CreatureCalculatorService calc;
@@ -21,7 +23,7 @@ public class CalculatorController : Controller
     }
 
 
-    [HttpGet("/calculator")]
+    [HttpGet("calculator")]
     public IActionResult Index()
     {
         var saved = HttpContext.Session.GetString("LastModel");

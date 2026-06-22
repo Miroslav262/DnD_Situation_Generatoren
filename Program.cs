@@ -21,6 +21,7 @@ string con_str = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddSingleton(con_str);
 builder.Services.AddTransient<CreatureRepository>();
 builder.Services.AddTransient<UserRepository>();
+builder.Services.AddTransient<CollectionRepository>();
 
 builder.Services.AddSession();
 
