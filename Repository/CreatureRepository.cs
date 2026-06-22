@@ -260,5 +260,91 @@ namespace dndsitgen.Repository
                 return null;
             }
         }
+
+        public async Task<bool> AddCreatureToScene(int sceneId, int creatureId, int count)
+        {
+            await using var connection = new NpgsqlConnection(con_str);
+            await connection.OpenAsync();
+
+            int affected = await connection.ExecuteAsync(
+                """
+                insert into "battle_scene_creature_ratio" (battle_scene_id, creature_id, count)
+                values (@sceneId, @creatureId, @count)
+                on conflict (battle_scene_id, creature_id)
+                do update set count = excluded.count;
+                """,
+                new { sceneId, creatureId, count }
+            );
+
+            return affected > 0;
+        }
+
+        public async Task<bool> UpdateCreatureCount(int sceneId, int creatureId, int count)
+        {
+            await using var connection = new NpgsqlConnection(con_str);
+            await connection.OpenAsync();
+
+            int affected = await connection.ExecuteAsync(
+                """
+            update "battle_scene_creature_ratio"
+            set count = @count
+            where battle_scene_id = @sceneId and creature_id = @creatureId;
+            """,
+                new { sceneId, creatureId, count }
+            );
+
+            return affected > 0;
+        }
+
+        public async Task<bool> ChangeCreature(int sceneId, int creatureId, int newCreatureId)
+        {
+            await using var connection = new NpgsqlConnection(con_str);
+            await connection.OpenAsync();
+
+            int affected = await connection.ExecuteAsync(
+                """
+            update "battle_scene_creature_ratio"
+            set creatureId = @newCreatureId
+            where battle_scene_id = @sceneId and creature_id = @creatureId;
+            """,
+                new { sceneId, creatureId, newCreatureId }
+            );
+
+            return affected > 0;
+        }
+
+        public async Task<bool> DeleteCreatureFromScene(int sceneId, int creatureId)
+        {
+            await using var connection = new NpgsqlConnection(con_str);
+            await connection.OpenAsync();
+
+            int affected = await connection.ExecuteAsync(
+                    """
+            delete from "battle_scene_creature_ratio"
+            where battle_scene_id = @sceneId and creature_id = @creatureId;
+            """,
+                new { sceneId, creatureId }
+            );
+
+            return affected > 0;
+        }
+        public async Task<CreatureCollectionRatio[]> GetCreaturesInScene(int sceneId)
+        {
+            await using var connection = new NpgsqlConnection(con_str);
+            await connection.OpenAsync();
+
+            var result = await connection.QueryAsync<CreatureCollectionRatio>(
+                    """
+            select creature_id as CreatureId, count
+            from "battle_scene_creature_ratio"
+            where battle_scene_id = @sceneId;
+            """,
+                new { sceneId }
+            );
+
+            return result.ToArray();
+        }
+
+
     }
 }

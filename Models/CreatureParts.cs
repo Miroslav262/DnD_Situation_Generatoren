@@ -57,6 +57,17 @@
         public string Name { get; set; } = "";
 
     }
+    public class CreatureCollectionRatio
+    {
+        public int CreatureId { get; set; }
+        public int Count { get; set; }
+    }
+    public class ChangeCreatureDto
+    {
+        public int NewCreatureId { get; set; }
+    }
+
+
 
 
 }
