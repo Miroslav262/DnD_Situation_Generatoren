@@ -85,15 +85,19 @@ builder.Services.AddAuthorization();
 builder.Services.AddSingleton<JwtService>();
 
 var app = builder.Build();
-/*
-if (app.Environment.IsDevelopment())
+
+app.UsePathBase("/dndsitgen/api");
+
+app.UseSwagger(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-*/
-app.UseSwagger();
-app.UseSwaggerUI();
+    c.RouteTemplate = "dndsitgen/api/swagger/{documentName}/swagger.json";
+});
+
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/dndsitgen/api/swagger/v1/swagger.json", "DnD API");
+    c.RoutePrefix = "dndsitgen/api/swagger";
+});
 
 app.UseStaticFiles();
 app.UseSession();
@@ -103,9 +107,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
