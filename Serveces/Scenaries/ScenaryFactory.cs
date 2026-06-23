@@ -2,16 +2,16 @@
 {
     public static class ScenaryFactory
     {
-        public static Scenary Create(string name)
+        public static Scenary Create(ScenaryEnum scenary)
         {
-            return name switch
+            return scenary switch
             {
-                "Boss" => new BossScenary(),
-                "Minions" => new MinionsScenary(),
-                "Uniform" => new UniformScenary(),
-                "Root" => new RootScenary(),
-                "Linear" => new LinearScenary(),
-                "SuperBoss" => new SuperBossScenary(),
+                ScenaryEnum.Boss => new BossScenary(),
+                ScenaryEnum.Minions => new MinionsScenary(),
+                ScenaryEnum.Uniform => new UniformScenary(),
+                ScenaryEnum.Root => new RootScenary(),
+                ScenaryEnum.Linear => new LinearScenary(),
+                ScenaryEnum.SuperBoss => new SuperBossScenary(),
                 _ => new MinionsScenary()
             };
         }

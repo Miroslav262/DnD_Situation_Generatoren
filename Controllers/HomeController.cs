@@ -9,14 +9,11 @@ namespace dndsitgen.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly CreaturesService _service;
-        private readonly GroqService groqService;
 
-        public HomeController(ILogger<HomeController> logger, CreaturesService service, GroqService groqService)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _service = service;
-            this.groqService = groqService;
+
         }
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -24,30 +21,6 @@ namespace dndsitgen.Controllers
 
             return View();
         }
-
-        [HttpGet("groq_test")]
-        public async Task<IActionResult> GroqTest()
-        {
-            try
-            {
-                string answer = await groqService.AskAsync("Расскажи кратко, что такое D&D?");
-
-                return Json(new
-                {
-                    ok = true,
-                    answer = answer
-                });
-            }
-            catch (Exception ex)
-            {
-                return Json(new
-                {
-                    ok = false,
-                    error = ex.Message
-                });
-            }
-        }
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

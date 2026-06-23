@@ -151,9 +151,13 @@ namespace dndsitgen.Serveces
         }
 
 
-        public float getHeroesComplexity(float[] cr, int[] k)
+        public float getHeroesComplexity(int[] cr, int[] k)
         {
-            return getComplexity(cr, k);
+            float[] cr1 = new float[cr.Length];
+            for (int i = 0; i<cr.Length; i++) {
+                cr1[i] = cr[i];
+            }
+            return getComplexity(cr1, k);
         }
 
 
