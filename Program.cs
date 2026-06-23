@@ -79,6 +79,14 @@ app.UseAuthorization();
 app.UseSwagger(c =>
 {
     c.RouteTemplate = "swagger/{documentName}/swagger.json";
+
+    c.PreSerializeFilters.Add((swagger, httpReq) =>
+    {
+        swagger.Servers = new List<OpenApiServer>
+        {
+            new OpenApiServer { Url = "/dndsitgen/api" }
+        };
+    });
 });
 
 app.UseSwaggerUI(c =>
@@ -86,6 +94,7 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/dndsitgen/api/swagger/v1/swagger.json", "DnD API");
     c.RoutePrefix = "swagger";
 });
+
 
 
 app.MapControllers();
