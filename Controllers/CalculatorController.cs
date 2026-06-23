@@ -3,8 +3,10 @@ using dndsitgen.Serveces;
 using dndsitgen.Serveces.Scenaries;
 using dndsitgen.Services;
 using dndsitgen.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+[Authorize]
 [ApiController]
 [Route("calculator")]
 public class CalculatorController : Controller

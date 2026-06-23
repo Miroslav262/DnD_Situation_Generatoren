@@ -1,9 +1,11 @@
 ﻿using dndsitgen.Models;
 using dndsitgen.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dndsitgen.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("user/{name}/collections")]
     public class CollectionController : Controller
