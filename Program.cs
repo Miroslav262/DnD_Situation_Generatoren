@@ -88,6 +88,11 @@ var app = builder.Build();
 
 app.UsePathBase("/dndsitgen/api");
 
+app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseSwagger(c =>
 {
     c.RouteTemplate = "dndsitgen/api/swagger/{documentName}/swagger.json";
@@ -100,16 +105,15 @@ app.UseSwaggerUI(c =>
 });
 
 app.UseStaticFiles();
+
 app.UseSession();
-
-app.UseRouting();
-
-app.UseAuthentication();
-app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.MapControllers();
+
 app.Run();
+
 
