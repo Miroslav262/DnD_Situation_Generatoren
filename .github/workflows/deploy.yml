@@ -40,15 +40,21 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
           mkdir -p ~/.dpkeys
+    
           docker pull ${{ secrets.DOCKER_USERNAME }}/dndsitgen:latest
+    
           docker stop dndsitgen || true
           docker rm dndsitgen || true
-
+    
           docker run -d \
             --name dndsitgen \
             --restart unless-stopped \
             -p 8082:8080 \
             -v ~/.dpkeys:/root/.aspnet/DataProtection-Keys \
-            -e Groq__ApiKey=${{ secrets.GROQ_API_KEY }} \
+            -e Groq__ApiKey="${{ secrets.GROQ_API_KEY }}" \
             -e ConnectionStrings__Default="${{ secrets.DB_CONNECTION_STRING }}" \
+            -e Jwt__Key="${{ secrets.JWT_KEY }}" \
+            -e Jwt__Issuer="${{ secrets.JWT_ISSUER }}" \
+            -e Jwt__Audience="${{ secrets.JWT_AUDIENCE }}" \
+            -e ApiKey="${{ secrets.API_KEY }}" \
             ${{ secrets.DOCKER_USERNAME }}/dndsitgen:latest
