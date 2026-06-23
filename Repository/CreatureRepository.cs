@@ -9,6 +9,7 @@ namespace dndsitgen.Repository
     {
         private readonly string con_str;
         private readonly ILogger<CreatureRepository> logger;
+        private readonly float SIMILARITY_CONST = 0.3f;
 
         public CreatureRepository(string str, ILogger<CreatureRepository> logger)
         {
@@ -32,7 +33,7 @@ namespace dndsitgen.Repository
             }
         }
 
-        public async Task<CreatureModel?> GetByIdAsync(long id)
+        public async Task<CreatureModel?> getByIdAsync(long id)
         {
             await using var connection = new NpgsqlConnection(con_str);
 
@@ -260,6 +261,137 @@ namespace dndsitgen.Repository
                 return null;
             }
         }
+
+        public async Task<CreatureModel[]?> getFilteredCreaturesAsync(CreatureFilter filter)
+        {
+            await using var connection = new NpgsqlConnection(con_str);
+            await connection.OpenAsync();
+
+            var sql = """
+                SELECT "id"
+                FROM "creature"
+                WHERE 1 = 1
+            """;
+
+            var parameters = new DynamicParameters();
+
+            if (!string.IsNullOrWhiteSpace(filter.Name))
+            {
+                sql += " AND similarity(\"name\", @name) > @sim";
+                parameters.Add("name", filter.Name);
+                parameters.Add("sim", SIMILARITY_CONST);
+            }
+
+            if (!string.IsNullOrWhiteSpace(filter.Cr))
+            {
+                sql += """
+                    AND "cr_id" = (
+                        SELECT "id" FROM "creature_cr"
+                        WHERE "cr" = @cr
+                    )
+                """;
+                parameters.Add("cr", filter.Cr);
+            }
+
+            if (!string.IsNullOrWhiteSpace(filter.Alignment))
+            {
+                sql += """
+                    AND "alignment_id" = (
+                        SELECT "id" FROM "creature_alignment"
+                        WHERE "name" = @alignment
+                    )
+                """;
+                parameters.Add("alignment", filter.Alignment);
+            }
+
+            if (filter.Ac.HasValue)
+            {
+                sql += " AND \"ac\" = @ac";
+                parameters.Add("ac", filter.Ac.Value);
+            }
+
+            if (filter.Passive.HasValue)
+            {
+                sql += " AND \"passive\" = @passive";
+                parameters.Add("passive", filter.Passive.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(filter.Size))
+            {
+                sql += """
+                    AND "size_id" = (
+                        SELECT "id" FROM "creature_size"
+                        WHERE "name" = @size OR "letter" = @size
+                    )
+                """;
+                parameters.Add("size", filter.Size);
+            }
+
+            if (!string.IsNullOrWhiteSpace(filter.Type))
+            {
+                sql += """
+                    AND "type_id" = (
+                        SELECT "id" FROM "creature_type"
+                        WHERE "name" = @type
+                    )
+                """;
+                parameters.Add("type", filter.Type);
+            }
+
+            if (!string.IsNullOrWhiteSpace(filter.Source))
+            {
+                sql += """
+                    AND "source_id" = (
+                        SELECT "id" FROM "creature_source"
+                        WHERE "name" = @source
+                    )
+                """;
+                parameters.Add("source", filter.Source);
+            }
+
+            if (!string.IsNullOrWhiteSpace(filter.Name))
+            {
+                sql += " ORDER BY similarity(\"name\", @name) DESC";
+            }
+
+            sql += ";";
+
+            int[]? ids = (await connection.QueryAsync<int>(sql, parameters)).ToArray();
+
+            var tasks = ids.Select(id => getByIdAsync(id)).ToArray();
+            var creatures = await Task.WhenAll(tasks);
+
+            return creatures.Where(c => c != null).ToArray()!;
+        }
+
+        private async Task<long?> getRandomId() {
+            NpgsqlConnection connection = new NpgsqlConnection(con_str);
+            try
+            {
+                await connection.OpenAsync();
+
+                long id = await connection.ExecuteScalarAsync<long>(
+                    @"SELECT ""id""
+                  FROM ""creature""
+                  OFFSET floor(random() * (SELECT COUNT(*) FROM ""creature""))
+                  LIMIT 1;");
+                return id;
+            }
+            catch {
+                return null;
+            }
+        }
+
+        public async Task<CreatureModel?> getRandomCreatureAsync() {
+            long? id = await getRandomId();
+            if (id == null) return null;
+
+            return await getByIdAsync((int)id);
+        }
+           
+
+
+
 
         public async Task<bool> AddCreatureToScene(int sceneId, int creatureId, int count)
         {

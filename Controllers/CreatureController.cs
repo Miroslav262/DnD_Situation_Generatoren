@@ -1,48 +1,59 @@
 ﻿using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using dndsitgen.Models;
-using dndsitgen.Serveces;
 using dndsitgen.Repository;
+using dndsitgen.Serveces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dndsitgen.Controllers
 {
     [ApiController]
+    [Route("creatures")]
     public class CreatureController : Controller
     {
-        private readonly CreaturesService _service;
         private readonly CreatureRepository repository;
-        private int? maxId = null;
-        public CreatureController(CreaturesService service, CreatureRepository creatureRepository) {
-            _service = service;
+        public CreatureController(CreatureRepository creatureRepository) {
             this.repository = creatureRepository;
-
-
         }
 
-        [HttpGet("creature/random_creature")]
-        public async Task<IActionResult> RandomCreature() {
-
-            int randomId = Random.Shared.Next(1, 30);
-            return View("~/Views/Creature/Creature.cshtml", await repository.GetByIdAsync(randomId));
+        [HttpGet("random")]
+        public async Task<IActionResult> getRandomCreature() {
+            CreatureModel? model = await repository.getRandomCreatureAsync();
+            if (model != null)
+            {
+                return Ok(model);
+            }
+            else
+            {
+                return StatusCode(500, "Unexpected error");
+            }
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> getCreatureById([FromRoute]int id) {
 
-        [HttpPost("creature")]
-        public async Task<IActionResult> Creature(CreatureModel creatureModel)
+            CreatureModel? model = await repository.getByIdAsync(id);
+            if (model != null)
+            {
+                return Ok(model);
+            }
+            else
+            {
+                return StatusCode(500, "Unexpected error");
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> getAllCreatures([FromQuery]CreatureFilter filter)
         {
-            return View("~/Views/Creature/Creature.cshtml", creatureModel);
-        }
+            CreatureModel[]? models = await repository.getFilteredCreaturesAsync(filter);
+            if (models != null)
+            {
+                return Ok(models);
+            }
+            else {
+                return StatusCode(500, "Unexpected error");
+            }
 
-        [HttpGet("creature/{key}")]
-        public async Task<IActionResult> CreatureByKey(string key)
-        {
-            return View("~/Views/Creature/Creature.cshtml", await _service.getCreatureByKey(key));
         }
-        [HttpGet("test")]
-        public IActionResult Test() {
-            this.repository.Test();
-            return Ok("done");
-        }
-
     }
 }
