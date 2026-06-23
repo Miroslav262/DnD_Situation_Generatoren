@@ -40,12 +40,11 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
           mkdir -p ~/.dpkeys
-    
+
           docker pull ${{ secrets.DOCKER_USERNAME }}/dndsitgen:latest
-    
-          docker stop dndsitgen || true
-          docker rm dndsitgen || true
-    
+          
+          docker rm -f dndsitgen || true
+          
           docker run -d \
             --name dndsitgen \
             --restart unless-stopped \
