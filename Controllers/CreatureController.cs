@@ -12,7 +12,7 @@ namespace dndsitgen.Controllers
     [Authorize]
     [ApiController]
     [Route("creatures")]
-    public class CreatureController : Controller
+    public class CreatureController : ControllerBase
     {
         private readonly CreatureRepository repository;
         public CreatureController(CreatureRepository creatureRepository) {

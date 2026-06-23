@@ -8,7 +8,7 @@ namespace dndsitgen.Controllers
     [Authorize]
     [ApiController]
     [Route("user/{name}/collections")]
-    public class CollectionController : Controller
+    public class CollectionController : ControllerBase
     {
         private readonly CollectionRepository collectionRepository;
         private readonly UserRepository userRepository;

@@ -8,7 +8,7 @@ namespace dndsitgen.Controllers
     [Authorize]
     [ApiController]
     [Route("user/{name}/collections/{sceneId}/creatures")]
-    public class CollectionCreatureController : Controller
+    public class CollectionCreatureController : ControllerBase
     {
 
         private readonly CreatureRepository repository;

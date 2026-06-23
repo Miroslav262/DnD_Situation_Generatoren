@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 [Authorize]
 [ApiController]
 [Route("calculator")]
-public class CalculatorController : Controller
+public class CalculatorController : ControllerBase
 {
     private readonly CreatureCalculatorService calc;
     public CalculatorController(CreatureCalculatorService calc)

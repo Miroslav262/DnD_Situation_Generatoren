@@ -10,7 +10,7 @@ namespace dndsitgen.Controllers
         public string pass_hash { get; set; }
     }
     [ApiController]
-    public class UserController : Controller
+    public class UserController : ControllerBase
     {
         private readonly UserRepository userRepository;
         private readonly JwtService jwtService;
