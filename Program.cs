@@ -1,10 +1,14 @@
+using System.Text;
+using Dapper;
 using dndsitgen.Repository;
 using dndsitgen.Serveces;
 using dndsitgen.Services;
-using Dapper;
+using dndsitgen.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using Microsoft.OpenApi;
+
 
 Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
@@ -24,7 +28,12 @@ builder.Services.AddTransient<UserRepository>();
 builder.Services.AddTransient<CollectionRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
+
+
 builder.Services.AddSwaggerGen();
+
+
+
 
 
 builder.Services.AddSession();
@@ -67,6 +76,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllerRoute(
     name: "default",

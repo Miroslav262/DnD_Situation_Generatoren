@@ -20,14 +20,15 @@ namespace dndsitgen.Controllers
         }
 
         [HttpPost("user")]
-        public async Task<IActionResult> Create([FromBody]UserModel request)
+        public async Task<IActionResult> Create([FromBody] LoginRequest request)
         {
             if (string.IsNullOrEmpty(request.name) || string.IsNullOrEmpty(request.pass_hash))
             {
                 return BadRequest("Required name and password");
             }
             else {
-                UserModel? user = await userRepository.createUser(request);
+                UserModel user1 = new UserModel { id=-1, pass_hash = request.pass_hash, name = request.name };
+                UserModel? user = await userRepository.createUser(user1);
                 if (user == null) {
                     return Conflict("User alredy exists");
                 }
