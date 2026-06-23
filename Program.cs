@@ -78,14 +78,15 @@ app.UseAuthorization();
 
 app.UseSwagger(c =>
 {
-    c.RouteTemplate = "dndsitgen/api/swagger/{documentName}/swagger.json";
+    c.RouteTemplate = "swagger/{documentName}/swagger.json";
 });
 
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/dndsitgen/api/swagger/v1/swagger.json", "DnD API");
-    c.RoutePrefix = "dndsitgen/api/swagger";
+    c.RoutePrefix = "swagger";
 });
+
 
 app.MapControllers();
 
