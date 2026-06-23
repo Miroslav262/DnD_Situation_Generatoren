@@ -5,31 +5,24 @@ using dndsitgen.Serveces;
 using dndsitgen.Services;
 using dndsitgen.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
-
 
 Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
 builder.Services.AddHttpClient<GroqService>();
 builder.Services.AddHttpClient<CreaturesService>();
 builder.Services.AddScoped<CreatureCalculatorService>();
-builder.Configuration.AddUserSecrets<Program>();
-
-string con_str = builder.Configuration.GetConnectionString("Default");
-
-builder.Services.AddSingleton(con_str);
+builder.Services.AddSingleton(builder.Configuration.GetConnectionString("Default"));
 builder.Services.AddTransient<CreatureRepository>();
 builder.Services.AddTransient<UserRepository>();
 builder.Services.AddTransient<CollectionRepository>();
+builder.Services.AddSingleton<JwtService>();
 
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -57,11 +50,6 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-
-
-
-builder.Services.AddSession();
-
 var key = builder.Configuration["Jwt:Key"];
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -81,15 +69,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-
-builder.Services.AddSingleton<JwtService>();
-
 var app = builder.Build();
 
 app.UsePathBase("/dndsitgen/api");
-
 app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -104,16 +87,6 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "dndsitgen/api/swagger";
 });
 
-app.UseStaticFiles();
-
-app.UseSession();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
 app.MapControllers();
 
 app.Run();
-
-
